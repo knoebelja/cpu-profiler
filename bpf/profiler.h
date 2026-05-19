@@ -1,5 +1,8 @@
 #pragma once
 
+// linux/types.h provides __u32, __u64, __s32 in both kernel and userspace contexts.
+#include <linux/types.h>
+
 // Maximum number of stack frames we'll capture per sample.
 // Deeper stacks are truncated. 32 is a reasonable default —
 // deep enough to be useful, shallow enough to keep map memory bounded.
