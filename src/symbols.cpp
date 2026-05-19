@@ -53,3 +53,53 @@ std::vector<std::string> SymbolResolver::resolve_kernel_stack(int map_fd, int32_
     return frames;
 
 }
+
+bool SymbolResolver::load_process_maps(int pid) {
+    char path[64];
+    snprintf(path, sizeof(path), "/proc/%d/maps", pid);
+
+    FILE *f = fopen(path, "r");
+    if (!f) return false;
+
+    std::vector<MapEntry> entries;
+    uint64_t start, end, file_offset;
+    char perms[8], path_buf[256] = {};
+
+    while (fscanf(f, "%lx-%lx %7s %lx %*s %*s %255[^\n]\n",
+           &start, &end, perms, &file_offset, path_buf) >= 4) {
+        // Only index executable mappings - those are the ones that contain code
+        if (perms[2] == 'x' && path_buf[0] == '/') {
+            MapEntry e;
+            e.start = start;
+            e.end = end;
+            e.file_offset = file_offset;
+            e.path = path_buf;
+            entries.push_back(e);
+        }
+        path_buf[0] = '\0';
+    }
+
+    fclose(f);
+    process_maps_[pid] = std::move(entries);
+    return true;
+}
+
+std::string SymbolResolver::resolve_user(int pid, uint64_t address) const {
+    auto it = process_maps_.find(pid);
+    if (it == process_maps_.end()) return "<no maps>";
+
+    // Find the mapping that contains this address
+    for (const auto &entry : it->second) {
+        if (address >= entry.start && address < entry.end) {
+         // Compute offset within the file
+         uint64_t offset = address - entry.start + entry.file_offset;
+         char buf[256];
+         snprintf(buf, sizeof(buf), "%s+0x%lx", entry.path.c_str(), offset);
+         return buf;
+        }
+    }
+
+    char buf[32];
+    snprintf(buf, sizeof(buf), "0x%lx", address);
+    return buf;
+}
