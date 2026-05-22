@@ -1,28 +1,54 @@
 # CPU Profiler
 
-A CPU profiler built with eBPF and C++. Samples all CPU cores at 99hz using perf events, capturing kernel and userspace call stacks via a BPF ring buffer. Resolves kernel addresses to symbol names via /proc/kallsyms.
+A live eBPF-based CPU profiler designed as an educational tool for understanding what the operating system is really doing while your computer runs. Samples all CPU cores at 99hz, captures kernel and userspace call stacks, and presents the data through a real-time TUI.
 
-Built as a learning exercise for eBPF, Linux internals, and systems performance.
+Built as a learning exercise for eBPF, Linux internals, C++, and systems performance.
+
+## North Star
+
+A suite of eBPF-based OS observability tools — starting with CPU, with memory profiling to follow. Each instrument uses the same pattern: eBPF collection, real-time aggregation, and a TUI that makes OS internals visible and intuitive.
+
+## Current Progress
+
+- [x] BPF program sampling all CPUs at 99hz via perf events
+- [x] Kernel stack resolution via `/proc/kallsyms`
+- [x] Userspace stack resolution via `/proc/PID/maps` (shows file+offset, not yet symbol names)
+- [x] Basic per-event output to stdout
+
+## Next Steps
+
+- [ ] Run collector on a background thread
+- [ ] Real-time aggregation: call tree (prefix trie) + per-thread kernel/user/idle counts
+- [ ] TUI with 3.4s refresh: thread activity view and call stack view
+- [ ] Terminal size as filter threshold
+- [ ] ELF symbol table parsing for real userspace function names
 
 ## Dependencies
 
 ```bash
-sudo apt install clang libbpf-dev libelf-dev zlib1g-dev bpftool
+sudo apt install clang libbpf-dev libelf-dev zlib1g-dev bpftool cmake
 ```
 
 ## Build
 
 ```bash
+mkdir build && cd build
+cmake ..
 make
 ```
 
 ## Usage
 
 ```bash
-sudo ./profiler
+sudo ./build/profiler
 ```
 
-Press Ctrl+C to stop. Output shows the process name, PID, CPU core, timestamp, and kernel call stack for each sample. Idle CPU samples (swapper/pid=0) are filtered out by default.
+## TUI Views
+
+The TUI refreshes every 3.4 seconds. Terminal size determines how much data is shown — a larger window reveals more threads and stack depth, a smaller one filters to only the hottest activity.
+
+- **Thread activity**: per-thread breakdown of time spent in kernel, userspace, and idle
+- **Call stacks**: nested call tree grouped and filterable by pid
 
 ## Project Structure
 
@@ -33,15 +59,18 @@ bpf/                    # BPF kernel program
 src/                    # Userspace C++
   main.cpp              # Entry point
   collector.cpp/h       # Loads BPF, manages perf events and ring buffer
-  symbols.cpp/h         # Resolves kernel addresses to function names
-  aggregator.cpp/h      # Counts and tracks samples (in progress)
+  symbols.cpp/h         # Resolves kernel and userspace addresses to function names
+  aggregator.cpp/h      # Real-time aggregation of stack samples
   output.cpp/h          # Formats and prints samples
+CMakeLists.txt          # Build system (CMake + FTXUI via FetchContent)
 ```
 
-## What's Next
+## How We're Building This
 
-- --no-idle flag to toggle idle sample filtering
-- Userspace stack resolution via /proc/PID/maps
-- Sample aggregation and frequency ranking
-- Flame graph output
-```
+This project is being built as a hands-on learning exercise for C++ and Linux systems programming. Claude's role is to guide the implementation, not do it. If you're a future Claude session picking this up:
+
+- **Don't edit files directly.** Show changes as code blocks with explanations of why.
+- **Be direct and specific.** Exact code to type is fine — the learning comes from understanding it, not from writing it from scratch.
+- **Review freely.** Reading the current code, catching bugs, and pointing out issues is encouraged.
+- **Explain the why.** Every change should come with enough context to understand what problem it solves and how it fits the bigger picture.
+- **Build system is Claude's responsibility.** The user focuses on BPF and C++; Claude owns CMakeLists.txt and build infrastructure.
