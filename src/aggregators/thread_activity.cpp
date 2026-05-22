@@ -1,10 +1,10 @@
 #include "thread_activity.h"
 #include "ftxui/dom/elements.hpp"
+#include "ftxui/screen/terminal.hpp"
 #include <algorithm>
 #include <unordered_map>
 
 using namespace ftxui;
-
 
 ftxui::Element
 ThreadActivityAggregator::render(const std::vector<stack_event> &events) const {
@@ -39,7 +39,7 @@ ThreadActivityAggregator::render(const std::vector<stack_event> &events) const {
   rows.push_back(legend);
   rows.push_back(separator());
 
-  const int bar_width = 40;
+  int bar_width = Terminal::Size().dimx - 8 - 27;
 
   for (const auto &[t, stats] : sorted) {
     size_t total = stats.kernel + stats.user + stats.idle;
@@ -57,7 +57,7 @@ ThreadActivityAggregator::render(const std::vector<stack_event> &events) const {
     });
 
     auto label = text("CPU " + std::to_string(t)) | size(WIDTH, EQUAL, 8);
-    auto counts = text(" kernel:" + std::to_string(stats.kernel) +
+    auto counts = text("   kernel:" + std::to_string(stats.kernel) +
                        " user:" + std::to_string(stats.user) +
                        " idle:" + std::to_string(stats.idle));
 

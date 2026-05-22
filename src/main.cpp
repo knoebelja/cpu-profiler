@@ -65,7 +65,7 @@ int main() {
         std::lock_guard<std::mutex> lock(view_mutex);
         auto title = text(aggregators[active]->title()) | bold | hcenter;
         auto desc = text(aggregators[active]->description()) | dim | hcenter;
-        return vbox({title, desc, separator(), current_view});
+        return vbox({title, desc, separator(), current_view | flex});
       }),
       [&](Event event) {
         if (event == Event::ArrowLeft) {
