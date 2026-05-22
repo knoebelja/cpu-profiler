@@ -8,20 +8,26 @@ Built as a learning exercise for eBPF, Linux internals, C++, and systems perform
 
 A suite of eBPF-based OS observability tools — starting with CPU, with memory profiling to follow. Each instrument uses the same pattern: eBPF collection, real-time aggregation, and a TUI that makes OS internals visible and intuitive.
 
+## Screenshot
+
+![Thread Activity View](screenshots/tui-thread-activity.png)
+
 ## Current Progress
 
 - [x] BPF program sampling all CPUs at 99hz via perf events
 - [x] Kernel stack resolution via `/proc/kallsyms`
 - [x] Userspace stack resolution via `/proc/PID/maps` (shows file+offset, not yet symbol names)
-- [x] Basic per-event output to stdout
+- [x] CMake build system with FTXUI via FetchContent
+- [x] Collector running on background thread
+- [x] Double-buffered event pipeline with 3.4s snapshot heartbeat
+- [x] TUI with thread activity view (per-CPU kernel/user/idle bar chart)
 
 ## Next Steps
 
-- [ ] Run collector on a background thread
-- [ ] Real-time aggregation: call tree (prefix trie) + per-thread kernel/user/idle counts
-- [ ] TUI with 3.4s refresh: thread activity view and call stack view
+- [ ] Call stack view: nested call tree grouped by pid
 - [ ] Terminal size as filter threshold
 - [ ] ELF symbol table parsing for real userspace function names
+- [ ] View navigation with left/right arrows (shell in place, needs more views)
 
 ## Dependencies
 
@@ -53,16 +59,20 @@ The TUI refreshes every 3.4 seconds. Terminal size determines how much data is s
 ## Project Structure
 
 ```
-bpf/                    # BPF kernel program
-  profiler.bpf.c        # Samples CPU stacks via perf events at 99hz
-  profiler.h            # Shared structs between kernel and userspace
-src/                    # Userspace C++
-  main.cpp              # Entry point
-  collector.cpp/h       # Loads BPF, manages perf events and ring buffer
-  symbols.cpp/h         # Resolves kernel and userspace addresses to function names
-  aggregator.cpp/h      # Real-time aggregation of stack samples
-  output.cpp/h          # Formats and prints samples
-CMakeLists.txt          # Build system (CMake + FTXUI via FetchContent)
+bpf/                          # BPF kernel program
+  profiler.bpf.c              # Samples CPU stacks via perf events at 99hz
+  profiler.h                  # Shared structs between kernel and userspace
+src/                          # Userspace C++
+  main.cpp                    # Entry point, TUI shell, double-buffer heartbeat
+  collector.cpp/h             # Loads BPF, manages perf events and ring buffer
+  buffer.h                    # Thread-safe double buffer for event snapshots
+  symbols.cpp/h               # Resolves kernel and userspace addresses to function names
+  output.cpp/h                # Legacy per-event stdout output (to be removed)
+  aggregators/
+    aggregator.h              # Abstract base class for all views
+    thread_activity.cpp/h     # Per-CPU kernel/user/idle bar chart
+CMakeLists.txt                # Build system (CMake + FTXUI via FetchContent)
+screenshots/                  # Screenshots for README
 ```
 
 ## How We're Building This

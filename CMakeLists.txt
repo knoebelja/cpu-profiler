@@ -36,15 +36,16 @@ FetchContent_MakeAvailable(ftxui)
 add_executable(profiler
     src/main.cpp
     src/collector.cpp
-    src/aggregator.cpp
     src/symbols.cpp
     src/output.cpp
+    src/aggregators/thread_activity.cpp
 )
 
 add_dependencies(profiler bpf_skel)
 
 target_include_directories(profiler PRIVATE
     src
+    src/aggregators
     bpf
     ${CMAKE_BINARY_DIR}
 )
@@ -57,3 +58,12 @@ target_link_libraries(profiler PRIVATE
     ftxui::dom
     ftxui::component
 )
+
+find_program(CLANG_FORMAT clang-format)
+if(CLANG_FORMAT)
+    file(GLOB_RECURSE ALL_SOURCE_FILES src/*.cpp src/*.h)
+    add_custom_target(format
+        COMMAND ${CLANG_FORMAT} -i ${ALL_SOURCE_FILES}
+        COMMENT "Formatting source files"
+    )
+endif()
