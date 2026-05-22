@@ -37,6 +37,11 @@ public:
     // Returns the symbol name for a userspace address in the given process,
     // or a hex string if the mapping or symbol can't be found.
     std::string resolve_user(int pid, uint64_t address) const;
+
+    // Looks up a stack ID in the BPF stack_traces map and resolves each
+    // address to a userspace symbol using the process memory maps.
+    // Loads /proc/PID/maps automatically if this pid hasn't been seen before.
+    std::vector<std::string> resolve_user_stack(int map_fd, int32_t stack_id, int pid);
 private:
     // Sorted map of address -> symbol name.
     // std::map keeps keys in order, which lets us use upper_bound

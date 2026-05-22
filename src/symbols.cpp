@@ -103,3 +103,27 @@ std::string SymbolResolver::resolve_user(int pid, uint64_t address) const {
     snprintf(buf, sizeof(buf), "0x%lx", address);
     return buf;
 }
+
+std::vector<std::string> SymbolResolver::resolve_user_stack(int map_fd, int32_t stack_id, int pid) {
+    std::vector<std::string> frames;
+
+    // Negative stack IDs mean BPF couldn't capture the stack. Nothing to resolve.
+    if (stack_id < 0) return frames;
+
+    // Look up the array of instruction pointer addresses for this stack ID.
+    uint64_t addrs[MAX_STACK_DEPTH] = {};
+    if (bpf_map_lookup_elem(map_fd, &stack_id, addrs) != 0)
+        return frames;
+
+    // Load this process's memory mappings the first time we see it.
+    // process_maps_ is a cache keyed by pids, so we only pay this cost once per process.
+    if (process_maps_.count(pid) == 0)
+        load_process_maps(pid);
+
+    for (int i = 0; i < MAX_STACK_DEPTH; i++) {
+        if (addrs[i] == 0) break;
+        frames.push_back(resolve_user(pid, addrs[i]));
+    }
+
+    return frames;
+}
