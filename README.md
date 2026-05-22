@@ -77,10 +77,4 @@ screenshots/                  # Screenshots for README
 
 ## How We're Building This
 
-This project is being built as a hands-on learning exercise for C++ and Linux systems programming. Claude's role is to guide the implementation, not do it. If you're a future Claude session picking this up:
-
-- **Don't edit files directly.** Show changes as code blocks with explanations of why.
-- **Be direct and specific.** Exact code to type is fine — the learning comes from understanding it, not from writing it from scratch.
-- **Review freely.** Reading the current code, catching bugs, and pointing out issues is encouraged.
-- **Explain the why.** Every change should come with enough context to understand what problem it solves and how it fits the bigger picture.
-- **Build system is Claude's responsibility.** The user focuses on BPF and C++; Claude owns CMakeLists.txt and build infrastructure.
+See [CLAUDE.md](CLAUDE.md) for instructions to future Claude sessions on how to collaborate on this project.
