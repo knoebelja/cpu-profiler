@@ -6,8 +6,8 @@
 
 using namespace ftxui;
 
-ftxui::Element
-ThreadActivityAggregator::render(const std::vector<stack_event> &events) const {
+ftxui::Element ThreadActivityAggregator::render(
+    const std::vector<resolved_event> &events) const {
   // Build per-thread stats from the event snapshot
   std::unordered_map<int, ThreadStats> threads;
   for (const auto &event : events) {

@@ -8,9 +8,11 @@ Built as a learning exercise for eBPF, Linux internals, C++, and systems perform
 
 A suite of eBPF-based OS observability tools — starting with CPU, with memory profiling to follow. Each instrument uses the same pattern: eBPF collection, real-time aggregation, and a TUI that makes OS internals visible and intuitive.
 
-## Screenshot
+## Screenshots
 
 ![Thread Activity View](screenshots/tui-thread-activity.png)
+
+![Kernel Dictionary View](screenshots/tui-kernel-dictionary.png)
 
 ## Current Progress
 
@@ -21,13 +23,14 @@ A suite of eBPF-based OS observability tools — starting with CPU, with memory 
 - [x] Collector running on background thread
 - [x] Double-buffered event pipeline with 3.4s snapshot heartbeat
 - [x] TUI with thread activity view (per-CPU kernel/user/idle bar chart)
+- [x] Kernel dictionary view: live top-N symbols ranked by CPU%, with descriptions and category color coding
+- [x] Symbol descriptions stored in `data/descriptions.json` (483 symbols with categories)
+- [x] `collect_symbols` tool to discover new kernel symbols on a running system
 
 ## Next Steps
 
 - [ ] Call stack view: nested call tree grouped by pid
-- [ ] Terminal size as filter threshold
 - [ ] ELF symbol table parsing for real userspace function names
-- [ ] View navigation with left/right arrows (shell in place, needs more views)
 
 ## Dependencies
 
@@ -54,7 +57,7 @@ sudo ./build/profiler
 The TUI refreshes every 3.4 seconds. Terminal size determines how much data is shown — a larger window reveals more threads and stack depth, a smaller one filters to only the hottest activity.
 
 - **Thread activity**: per-thread breakdown of time spent in kernel, userspace, and idle
-- **Call stacks**: nested call tree grouped and filterable by pid
+- **Kernel dictionary**: top-20 kernel symbols ranked by CPU utilization, with descriptions and category color coding
 
 ## Project Structure
 
@@ -71,7 +74,12 @@ src/                          # Userspace C++
   aggregators/
     aggregator.h              # Abstract base class for all views
     thread_activity.cpp/h     # Per-CPU kernel/user/idle bar chart
-CMakeLists.txt                # Build system (CMake + FTXUI via FetchContent)
+    kernel_dictionary.cpp/h   # Top kernel symbols ranked by CPU%, with descriptions
+data/
+  descriptions.json           # 483 kernel symbols with descriptions and categories
+tools/
+  collect_symbols.cpp         # Samples for 2 minutes and adds new symbols to descriptions.json
+CMakeLists.txt                # Build system (CMake + FTXUI + nlohmann/json via FetchContent)
 screenshots/                  # Screenshots for README
 ```
 

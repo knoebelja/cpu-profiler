@@ -1,0 +1,2757 @@
+[
+  {
+    "category": "drm",
+    "description": "i915 inner function to populate a GEM object's backing pages from its memory region",
+    "symbol": "____i915_gem_object_get_pages"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "____sys_recvmsg"
+  },
+  {
+    "category": "memory",
+    "description": "SLUB slow-path allocator; refills the per-CPU slab from a partial or new slab",
+    "symbol": "___slab_alloc"
+  },
+  {
+    "category": "network",
+    "description": "Kernel body of recvmsg(2); validates the msghdr and delegates to the socket's proto_ops",
+    "symbol": "___sys_recvmsg"
+  },
+  {
+    "category": "memory",
+    "description": "Core page allocator without profiling overhead; selects a memory zone and calls the buddy allocator",
+    "symbol": "__alloc_pages_noprof"
+  },
+  {
+    "category": "network",
+    "description": "Allocates a socket buffer (skb) with a contiguous data area for network packet construction",
+    "symbol": "__alloc_skb"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "__bitmap_and"
+  },
+  {
+    "category": "block-io",
+    "description": "Flushes the current thread's block IO plug list; submits batched requests to the block layer",
+    "symbol": "__blk_flush_plug"
+  },
+  {
+    "category": "block-io",
+    "description": "Inner dispatch loop for the blk-mq scheduler; pulls requests from the scheduler queue and sends to hardware",
+    "symbol": "__blk_mq_do_dispatch_sched"
+  },
+  {
+    "category": "block-io",
+    "description": "Dispatches requests from the blk-mq scheduler to the hardware queue",
+    "symbol": "__blk_mq_sched_dispatch_requests"
+  },
+  {
+    "category": "filesystem",
+    "description": "Marks buffer heads dirty after a write; triggers writeback for the affected page",
+    "symbol": "__block_commit_write"
+  },
+  {
+    "category": "syscall",
+    "description": "Verifies a userspace pointer and size are safe to copy to/from; prevents overflow attacks",
+    "symbol": "__check_object_size"
+  },
+  {
+    "category": "filesystem",
+    "description": "Frees a dentry whose refcount hit zero; unhashes it and releases its inode reference",
+    "symbol": "__dentry_kill"
+  },
+  {
+    "category": "network",
+    "description": "Core network transmit path; selects the qdisc, enqueues the skb, and calls the driver",
+    "symbol": "__dev_queue_xmit"
+  },
+  {
+    "category": "dma",
+    "description": "Maps a scatter-gather list for DMA with IOMMU translation and cache coherency handling",
+    "symbol": "__dma_map_sg_attrs"
+  },
+  {
+    "category": "memory",
+    "description": "Handles a file-backed page fault by calling the VMA's fault handler to bring the page in",
+    "symbol": "__do_fault"
+  },
+  {
+    "category": "interrupt",
+    "description": "Processes all pending softirq vectors in a loop; yields to ksoftirqd if budget is exhausted",
+    "symbol": "__do_softirq"
+  },
+  {
+    "category": "syscall",
+    "description": "Kernel implementation of fstatat(2); resolves the path and fills in struct stat",
+    "symbol": "__do_sys_newfstatat"
+  },
+  {
+    "category": "process",
+    "description": "Waits for a specific work item to finish executing on its workqueue",
+    "symbol": "__flush_work"
+  },
+  {
+    "category": "memory",
+    "description": "Adds a folio to a batch and flushes the batch to the LRU list when full",
+    "symbol": "__folio_batch_add_and_move"
+  },
+  {
+    "category": "filesystem",
+    "description": "Marks a folio as dirty in the page cache; schedules it for writeback",
+    "symbol": "__folio_mark_dirty"
+  },
+  {
+    "category": "memory",
+    "description": "Modifies per-zone or per-node folio statistics counters atomically",
+    "symbol": "__folio_mod_stat"
+  },
+  {
+    "category": "filesystem",
+    "description": "Final cleanup when a file's last reference is dropped; calls f_op->release and frees the struct",
+    "symbol": "__fput"
+  },
+  {
+    "category": "filesystem",
+    "description": "Synchronous variant of __fput; called when it's safe to release the file immediately",
+    "symbol": "__fput_sync"
+  },
+  {
+    "category": "locking",
+    "description": "Checks the futex value matches expected, then blocks the thread on the futex wait queue",
+    "symbol": "__futex_wait"
+  },
+  {
+    "category": "syscall",
+    "description": "Reads 8 bytes from a userspace address with SMAP-aware fault handling",
+    "symbol": "__get_user_8"
+  },
+  {
+    "category": "syscall",
+    "description": "Reads 4 bytes from a userspace address without SMAP checks; used in hot copy paths",
+    "symbol": "__get_user_nocheck_4"
+  },
+  {
+    "category": "memory",
+    "description": "Dispatches a page fault to the correct handler (anonymous, file-backed, COW, etc.)",
+    "symbol": "__handle_mm_fault"
+  },
+  {
+    "category": "interrupt",
+    "description": "Initializes an hrtimer struct with a clock base and expiry mode",
+    "symbol": "__hrtimer_init"
+  },
+  {
+    "category": "drm",
+    "description": "Allocates a GEM buffer object backed by a specific memory region (LMEM, SMEM, stolen)",
+    "symbol": "__i915_gem_object_create_region"
+  },
+  {
+    "category": "drm",
+    "description": "Populates a GEM object's page list; allocates physical pages if not yet backed",
+    "symbol": "__i915_gem_object_get_pages"
+  },
+  {
+    "category": "interrupt",
+    "description": "Decrements the IRQ nesting count and triggers softirq processing if any are pending",
+    "symbol": "__irq_exit_rcu"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "__kmalloc_node_noprof"
+  },
+  {
+    "category": "memory",
+    "description": "General-purpose kernel heap allocator without memory profiling instrumentation",
+    "symbol": "__kmalloc_noprof"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "__kvmalloc_node_noprof"
+  },
+  {
+    "category": "interrupt",
+    "description": "Re-enables local softirq (bottom-half) processing and runs pending softirqs",
+    "symbol": "__local_bh_enable_ip"
+  },
+  {
+    "category": "memory",
+    "description": "Modifies an LRU vector stat for a folio; used for memory accounting per cgroup and zone",
+    "symbol": "__lruvec_stat_mod_folio"
+  },
+  {
+    "category": "cgroup",
+    "description": "Charges memory usage to a cgroup; blocks if the cgroup is over its limit",
+    "symbol": "__mem_cgroup_charge"
+  },
+  {
+    "category": "cgroup",
+    "description": "Accounts a slab allocation to the current memory cgroup after the object is returned",
+    "symbol": "__memcg_slab_post_alloc_hook"
+  },
+  {
+    "category": "memory",
+    "description": "Optimized memory copy routine; used for bulk data movement between kernel buffers",
+    "symbol": "__memcpy"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "__memset"
+  },
+  {
+    "category": "memory",
+    "description": "Core mmap implementation; sets up the VMA, calls mmap on the file, and inserts into mm",
+    "symbol": "__mmap_region"
+  },
+  {
+    "category": "cgroup",
+    "description": "Modifies a memory cgroup LRU vector state counter for accounting purposes",
+    "symbol": "__mod_memcg_lruvec_state"
+  },
+  {
+    "category": "interrupt",
+    "description": "Converts milliseconds to kernel jiffies accounting for HZ configuration",
+    "symbol": "__msecs_to_jiffies"
+  },
+  {
+    "category": "network",
+    "description": "Calls a NAPI device's poll function and handles budget accounting and re-scheduling",
+    "symbol": "__napi_poll"
+  },
+  {
+    "category": "network",
+    "description": "Delivers a received packet to the registered protocol handler after running tc hooks",
+    "symbol": "__netif_receive_skb_core"
+  },
+  {
+    "category": "network",
+    "description": "Batch variant of __netif_receive_skb_core; delivers a list of packets together",
+    "symbol": "__netif_receive_skb_list_core"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "__pollwait"
+  },
+  {
+    "category": "memory",
+    "description": "Maps a PMD entry and returns a pointer to the PTE for a given virtual address",
+    "symbol": "__pte_offset_map"
+  },
+  {
+    "category": "syscall",
+    "description": "Writes 8 bytes to a userspace address with SMAP-aware fault handling",
+    "symbol": "__put_user_8"
+  },
+  {
+    "category": "syscall",
+    "description": "Writes 4 bytes to a userspace address without SMAP checks; used in hot copy paths",
+    "symbol": "__put_user_nocheck_4"
+  },
+  {
+    "category": "syscall",
+    "description": "Writes 8 bytes to a userspace address without SMAP checks; used in hot copy paths",
+    "symbol": "__put_user_nocheck_8"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "__radix_tree_lookup"
+  },
+  {
+    "category": "locking",
+    "description": "Lockdep-free spinlock acquire with IRQ flag save; used in paths where lockdep annotations must be skipped",
+    "symbol": "__raw_spin_lock_irqsave"
+  },
+  {
+    "category": "interrupt",
+    "description": "Enters an RCU read-side critical section; disables preemption on non-PREEMPT kernels",
+    "symbol": "__rcu_read_lock"
+  },
+  {
+    "category": "locking",
+    "description": "Marks the end of an RCU read-side critical section; decrements the nesting count and re-enables preemption",
+    "symbol": "__rcu_read_unlock"
+  },
+  {
+    "category": "process",
+    "description": "Delivers a restartable sequence abort notification to the task on return to userspace",
+    "symbol": "__rseq_handle_notify_resume"
+  },
+  {
+    "category": "interrupt",
+    "description": "Expires all timers in the current timer wheel bucket for the given base",
+    "symbol": "__run_timers"
+  },
+  {
+    "category": "scheduler",
+    "description": "Core scheduler body; dequeues current task, calls pick_next_task, performs context_switch",
+    "symbol": "__schedule"
+  },
+  {
+    "category": "syscall",
+    "description": "Runs a BPF seccomp filter against the current syscall; may kill or trap the task",
+    "symbol": "__seccomp_filter"
+  },
+  {
+    "category": "syscall",
+    "description": "Entry point for seccomp; checks the mode and calls __seccomp_filter if needed",
+    "symbol": "__secure_computing"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "__skb_datagram_iter"
+  },
+  {
+    "category": "block-io",
+    "description": "Submits a bio to the block layer after throttling and accounting checks",
+    "symbol": "__submit_bio"
+  },
+  {
+    "category": "syscall",
+    "description": "Kernel body of bpf(2); dispatches to the appropriate BPF command handler",
+    "symbol": "__sys_bpf"
+  },
+  {
+    "category": "network",
+    "description": "Looks up the socket fd and calls sock_recvmsg with the caller's msghdr",
+    "symbol": "__sys_recvmsg"
+  },
+  {
+    "category": "network",
+    "description": "Looks up the socket fd and calls sock_sendmsg; handles both send() and sendto()",
+    "symbol": "__sys_sendto"
+  },
+  {
+    "category": "memory",
+    "description": "Checks whether a virtual address maps to a valid struct page in the direct map",
+    "symbol": "__virt_addr_valid"
+  },
+  {
+    "category": "memory",
+    "description": "Frees a VMA struct after all references are gone; called via RCU callback",
+    "symbol": "__vm_area_free"
+  },
+  {
+    "category": "filesystem",
+    "description": "Iterates dirty inodes on a writeback device and submits them for writeback",
+    "symbol": "__writeback_inodes_wb"
+  },
+  {
+    "category": "filesystem",
+    "description": "Writes back a single inode's dirty pages and metadata to disk",
+    "symbol": "__writeback_single_inode"
+  },
+  {
+    "category": "syscall",
+    "description": "Kernel implementation of bpf(2); entry point for all BPF commands from userspace",
+    "symbol": "__x64_sys_bpf"
+  },
+  {
+    "category": "syscall",
+    "description": "Kernel implementation of clock_nanosleep(2); arms an hrtimer and suspends the thread",
+    "symbol": "__x64_sys_clock_nanosleep"
+  },
+  {
+    "category": "syscall",
+    "description": "Kernel implementation of close(2); drops the file descriptor and decrefs the file struct",
+    "symbol": "__x64_sys_close"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "__x64_sys_epoll_pwait2"
+  },
+  {
+    "category": "syscall",
+    "description": "Kernel implementation of epoll_wait(2); blocks until monitored fds become ready",
+    "symbol": "__x64_sys_epoll_wait"
+  },
+  {
+    "category": "syscall",
+    "description": "Kernel implementation of futex(2); fast path checks uaddr in userspace before entering kernel",
+    "symbol": "__x64_sys_futex"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "__x64_sys_getdents64"
+  },
+  {
+    "category": "syscall",
+    "description": "Kernel implementation of ioctl(2); looks up the fd and dispatches to f_op->unlocked_ioctl",
+    "symbol": "__x64_sys_ioctl"
+  },
+  {
+    "category": "syscall",
+    "description": "Kernel implementation of madvise(2); applies hints (MADV_FREE, MADV_DONTNEED, etc.) to VMAs",
+    "symbol": "__x64_sys_madvise"
+  },
+  {
+    "category": "syscall",
+    "description": "Kernel implementation of mmap(2); calls ksys_mmap_pgoff to set up the mapping",
+    "symbol": "__x64_sys_mmap"
+  },
+  {
+    "category": "syscall",
+    "description": "Kernel implementation of mprotect(2); changes protection flags on a VMA range",
+    "symbol": "__x64_sys_mprotect"
+  },
+  {
+    "category": "syscall",
+    "description": "Kernel implementation of fstatat(2); resolves path relative to a directory fd",
+    "symbol": "__x64_sys_newfstatat"
+  },
+  {
+    "category": "syscall",
+    "description": "Kernel implementation of openat(2); resolves the path and creates or opens the file",
+    "symbol": "__x64_sys_openat"
+  },
+  {
+    "category": "syscall",
+    "description": "Kernel implementation of poll(2); iterates fds and blocks via poll_schedule_timeout",
+    "symbol": "__x64_sys_poll"
+  },
+  {
+    "category": "syscall",
+    "description": "Kernel implementation of pselect6(2); wraps do_pselect with a signal mask swap",
+    "symbol": "__x64_sys_pselect6"
+  },
+  {
+    "category": "syscall",
+    "description": "Kernel implementation of read(2); looks up the fd and calls vfs_read",
+    "symbol": "__x64_sys_read"
+  },
+  {
+    "category": "syscall",
+    "description": "Kernel implementation of recvmsg(2); validates and copies the msghdr from userspace",
+    "symbol": "__x64_sys_recvmsg"
+  },
+  {
+    "category": "syscall",
+    "description": "Kernel implementation of rename(2); delegates to do_renameat2 with no flags",
+    "symbol": "__x64_sys_rename"
+  },
+  {
+    "category": "syscall",
+    "description": "Kernel implementation of sched_yield(2); voluntarily relinquishes the CPU to other runnable tasks",
+    "symbol": "__x64_sys_sched_yield"
+  },
+  {
+    "category": "syscall",
+    "description": "Kernel implementation of sendto(2); copies address and delegates to sock_sendmsg",
+    "symbol": "__x64_sys_sendto"
+  },
+  {
+    "category": "syscall",
+    "description": "Kernel implementation of setitimer(2); arms a POSIX interval timer using the hrtimer subsystem",
+    "symbol": "__x64_sys_setitimer"
+  },
+  {
+    "category": "syscall",
+    "description": "Kernel implementation of statx(2); returns extended file attributes including birth time",
+    "symbol": "__x64_sys_statx"
+  },
+  {
+    "category": "syscall",
+    "description": "Kernel implementation of write(2); looks up the fd and calls vfs_write",
+    "symbol": "__x64_sys_write"
+  },
+  {
+    "category": "syscall",
+    "description": "Kernel implementation of writev(2); gathers iovec array from userspace and calls do_writev",
+    "symbol": "__x64_sys_writev"
+  },
+  {
+    "category": "network",
+    "description": "Copies data from an iov_iter (scatter-gather source) into a kernel buffer",
+    "symbol": "_copy_from_iter"
+  },
+  {
+    "category": "syscall",
+    "description": "Copies data from a userspace buffer to kernel memory with fault handling",
+    "symbol": "_copy_from_user"
+  },
+  {
+    "category": "network",
+    "description": "Copies data from a kernel buffer into an iov_iter (scatter-gather destination)",
+    "symbol": "_copy_to_iter"
+  },
+  {
+    "category": "scheduler",
+    "description": "Scans a bitmask for the next set bit where two bitmaps AND together; used for CPU affinity",
+    "symbol": "_find_next_and_bit"
+  },
+  {
+    "category": "scheduler",
+    "description": "Finds the next set bit in a bitmap starting from a given position",
+    "symbol": "_find_next_bit"
+  },
+  {
+    "category": "drm",
+    "description": "Initializes a GEM object backed by stolen (pre-reserved) display memory",
+    "symbol": "_i915_gem_object_stolen_init"
+  },
+  {
+    "category": "scheduler",
+    "description": "Pulls tasks from busy CPUs onto this idle CPU while in NO_HZ idle mode",
+    "symbol": "_nohz_idle_balance"
+  },
+  {
+    "category": "locking",
+    "description": "Acquires a spinlock; on SMP, busy-waits using LOCK CMPXCHG until the lock is free",
+    "symbol": "_raw_spin_lock"
+  },
+  {
+    "category": "locking",
+    "description": "Acquires a spinlock and disables local interrupts without saving flags; caller guarantees IRQs were enabled",
+    "symbol": "_raw_spin_lock_irq"
+  },
+  {
+    "category": "locking",
+    "description": "Acquires a spinlock and saves then disables local IRQ flags; paired with _raw_spin_unlock_irqrestore",
+    "symbol": "_raw_spin_lock_irqsave"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "_raw_spin_rq_lock_irqsave"
+  },
+  {
+    "category": "locking",
+    "description": "Tries to acquire a spinlock without blocking; returns false immediately if contended",
+    "symbol": "_raw_spin_trylock"
+  },
+  {
+    "category": "locking",
+    "description": "Releases a spinlock and re-enables local interrupts",
+    "symbol": "_raw_spin_unlock_irq"
+  },
+  {
+    "category": "locking",
+    "description": "Releases a spinlock and restores saved IRQ flags",
+    "symbol": "_raw_spin_unlock_irqrestore"
+  },
+  {
+    "category": "locking",
+    "description": "Releases a write-side rwlock and re-enables local interrupts",
+    "symbol": "_raw_write_unlock_irq"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "acpi_ec_gpe_handler"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "acpi_ev_detect_gpe"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "acpi_ev_gpe_detect"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "acpi_ev_sci_xrupt_handler"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "acpi_irq"
+  },
+  {
+    "category": "scheduler",
+    "description": "Migrates a task from an overloaded CPU; runs in the cpu_stopper context",
+    "symbol": "active_load_balance_cpu_stop"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "add_wait_queue"
+  },
+  {
+    "category": "memory",
+    "description": "Allocates a folio (compound page) for an anonymous mapping; called on first write fault",
+    "symbol": "alloc_anon_folio"
+  },
+  {
+    "category": "memory",
+    "description": "Allocates pages respecting NUMA memory policy without profiling overhead",
+    "symbol": "alloc_pages_mpol_noprof"
+  },
+  {
+    "category": "network",
+    "description": "Allocates an skb with paged data frags; used for zero-copy network sends",
+    "symbol": "alloc_skb_with_frags"
+  },
+  {
+    "category": "misc",
+    "description": "AppArmor LSM hook called on file close; releases the AppArmor security context attached to the struct file",
+    "symbol": "apparmor_file_free_security"
+  },
+  {
+    "category": "network",
+    "description": "Handles an incoming ARP packet; updates the neighbour table and sends replies",
+    "symbol": "arp_process"
+  },
+  {
+    "category": "network",
+    "description": "Receives an ARP frame from the network device layer and calls arp_process",
+    "symbol": "arp_rcv"
+  },
+  {
+    "category": "network",
+    "description": "Constructs and transmits an ARP request or reply for a given destination",
+    "symbol": "arp_send_dst"
+  },
+  {
+    "category": "network",
+    "description": "Transmits an ARP skb via dev_queue_xmit after setting the hardware address",
+    "symbol": "arp_xmit"
+  },
+  {
+    "category": "memory",
+    "description": "Assembly entry for page fault exception; saves registers and calls exc_page_fault",
+    "symbol": "asm_exc_page_fault"
+  },
+  {
+    "category": "interrupt",
+    "description": "Assembly entry for the local APIC timer interrupt; drives per-CPU scheduler ticks",
+    "symbol": "asm_sysvec_apic_timer_interrupt"
+  },
+  {
+    "category": "interrupt",
+    "description": "Assembly entry for the single-CPU IPI; calls the queued function on this CPU",
+    "symbol": "asm_sysvec_call_function_single"
+  },
+  {
+    "category": "interrupt",
+    "description": "Assembly entry for the reschedule IPI; sets TIF_NEED_RESCHED and returns",
+    "symbol": "asm_sysvec_reschedule_ipi"
+  },
+  {
+    "category": "block-io",
+    "description": "Returns true if the blkcg associated with the current task has hit its writeback congestion threshold",
+    "symbol": "blk_cgroup_congested"
+  },
+  {
+    "category": "block-io",
+    "description": "Flushes the current thread's IO plug list; submits batched requests to the driver",
+    "symbol": "blk_finish_plug"
+  },
+  {
+    "category": "block-io",
+    "description": "Dispatches a list of plugged blk-mq requests directly to the hardware queue",
+    "symbol": "blk_mq_dispatch_plug_list"
+  },
+  {
+    "category": "block-io",
+    "description": "Dispatches a list of blk-mq requests to the device driver's queue_rq function",
+    "symbol": "blk_mq_dispatch_rq_list"
+  },
+  {
+    "category": "block-io",
+    "description": "Flushes the per-task blk-mq plug list; merges and dispatches accumulated requests",
+    "symbol": "blk_mq_flush_plug_list"
+  },
+  {
+    "category": "block-io",
+    "description": "Runs a blk-mq hardware queue; pops requests and calls the driver's queue_rq",
+    "symbol": "blk_mq_run_hw_queue"
+  },
+  {
+    "category": "block-io",
+    "description": "Attempts to merge a new bio with an existing request in the blk-mq scheduler",
+    "symbol": "blk_mq_sched_bio_merge"
+  },
+  {
+    "category": "block-io",
+    "description": "Dispatches pending requests from the blk-mq scheduler to hardware queues",
+    "symbol": "blk_mq_sched_dispatch_requests"
+  },
+  {
+    "category": "block-io",
+    "description": "Multiqueue block layer submission; maps a bio to a hardware queue and dispatches it",
+    "symbol": "blk_mq_submit_bio"
+  },
+  {
+    "category": "block-io",
+    "description": "Applies block cgroup throttle limits to the current task if it exceeds its iops/bps quota",
+    "symbol": "blkcg_maybe_throttle_current"
+  },
+  {
+    "category": "filesystem",
+    "description": "Called when a file-backed page is about to be written; starts a journal transaction for ext4",
+    "symbol": "block_page_mkwrite"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "bpf_prog_28a890580b33b0dc"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "cache_tag_flush_all"
+  },
+  {
+    "category": "idle",
+    "description": "Calls into the cpuidle governor to select and enter the best idle C-state",
+    "symbol": "call_cpuidle"
+  },
+  {
+    "category": "interrupt",
+    "description": "Invokes a timer callback function; handles tracing and lockdep annotations",
+    "symbol": "call_timer_fn"
+  },
+  {
+    "category": "cgroup",
+    "description": "Propagates per-CPU cgroup resource stats up the cgroup hierarchy",
+    "symbol": "cgroup_rstat_flush"
+  },
+  {
+    "category": "memory",
+    "description": "Validates that a pointer range lies within a known heap object; hardened copy path",
+    "symbol": "check_heap_object"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "clear_page_erms"
+  },
+  {
+    "category": "cgroup",
+    "description": "Aggregates per-CPU time statistics for cgroup or scheduler accounting",
+    "symbol": "collect_percpu_times"
+  },
+  {
+    "category": "syscall",
+    "description": "Shared implementation for clock_nanosleep; sets up the hrtimer and calls do_nanosleep",
+    "symbol": "common_nsleep"
+  },
+  {
+    "category": "process",
+    "description": "Shared 64-bit CPU startup path; sets up segments and calls start_secondary or start_kernel",
+    "symbol": "common_startup_64"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "consume_skb"
+  },
+  {
+    "category": "cgroup",
+    "description": "Consumes pre-charged memory cgroup stock before hitting the slower charge path",
+    "symbol": "consume_stock"
+  },
+  {
+    "category": "network",
+    "description": "Copies a struct msghdr from userspace; validates pointers and iovec arrays",
+    "symbol": "copy_msghdr_from_user"
+  },
+  {
+    "category": "memory",
+    "description": "Copies one page of data from an iov_iter into a kernel page; used in write fault paths",
+    "symbol": "copy_page_from_iter"
+  },
+  {
+    "category": "syscall",
+    "description": "Core implementation of select(2); builds fd_sets and calls do_select",
+    "symbol": "core_sys_select"
+  },
+  {
+    "category": "cgroup",
+    "description": "Increments a memory cgroup event counter; used to track reclaim, fault, and OOM events",
+    "symbol": "count_memcg_events"
+  },
+  {
+    "category": "idle",
+    "description": "Controls whether the CPU uses polling idle before entering deeper C-states",
+    "symbol": "cpu_idle_poll_ctrl"
+  },
+  {
+    "category": "idle",
+    "description": "Per-CPU idle thread entry; loops in do_idle until the CPU is hotplugged off",
+    "symbol": "cpu_startup_entry"
+  },
+  {
+    "category": "process",
+    "description": "Kernel thread that executes stop_machine callbacks with all other CPUs paused",
+    "symbol": "cpu_stopper_thread"
+  },
+  {
+    "category": "scheduler",
+    "description": "Returns estimated CPU utilization for a runqueue; used by the load balancer and scheduler",
+    "symbol": "cpu_util"
+  },
+  {
+    "category": "idle",
+    "description": "Entry point for putting a CPU into an idle state via the registered cpuidle driver",
+    "symbol": "cpuidle_enter"
+  },
+  {
+    "category": "idle",
+    "description": "Enters a specific C-state; calls the driver's enter fn and accounts idle time",
+    "symbol": "cpuidle_enter_state"
+  },
+  {
+    "category": "idle",
+    "description": "Selects an idle state via the governor, arms the next timer, then calls cpuidle_enter",
+    "symbol": "cpuidle_idle_call"
+  },
+  {
+    "category": "idle",
+    "description": "Notifies the cpuidle governor of the C-state that was actually used after wakeup",
+    "symbol": "cpuidle_reflect"
+  },
+  {
+    "category": "filesystem",
+    "description": "Deferred file close executed from a work queue; calls __fput on files closed in atomic context",
+    "symbol": "delayed_fput"
+  },
+  {
+    "category": "filesystem",
+    "description": "Unlinks a dentry from its inode; called during rename and unlink operations",
+    "symbol": "dentry_unlink_inode"
+  },
+  {
+    "category": "dma",
+    "description": "Maps a scatter-gather table for DMA access; handles IOMMU mapping and cache synchronization",
+    "symbol": "dma_map_sgtable"
+  },
+  {
+    "category": "memory",
+    "description": "Handles a fault on an anonymous mapping; allocates a zeroed page and installs its PTE",
+    "symbol": "do_anonymous_page"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "do_dentry_open"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "do_epoll_pwait"
+  },
+  {
+    "category": "syscall",
+    "description": "Main epoll wait loop; checks ready list and blocks until events arrive or timeout expires",
+    "symbol": "do_epoll_wait"
+  },
+  {
+    "category": "memory",
+    "description": "Routes a file-backed page fault to do_read_fault, do_cow_fault, or do_shared_fault",
+    "symbol": "do_fault"
+  },
+  {
+    "category": "filesystem",
+    "description": "Opens a file path into a struct file; allocates the file and calls do_dentry_open",
+    "symbol": "do_filp_open"
+  },
+  {
+    "category": "locking",
+    "description": "Dispatches a futex(2) operation (WAIT, WAKE, REQUEUE, etc.) to the correct handler",
+    "symbol": "do_futex"
+  },
+  {
+    "category": "idle",
+    "description": "Idle loop body; calls cpuidle_enter or HLT, then handles pending work on wakeup",
+    "symbol": "do_idle"
+  },
+  {
+    "category": "filesystem",
+    "description": "Iterates over an iovec or bvec array performing vectored reads or writes via f_op",
+    "symbol": "do_iter_readv_writev"
+  },
+  {
+    "category": "memory",
+    "description": "Walks VMAs in the requested range and applies the given madvise behavior",
+    "symbol": "do_madvise"
+  },
+  {
+    "category": "memory",
+    "description": "Sets up a new memory mapping; validates parameters and calls mmap_region",
+    "symbol": "do_mmap"
+  },
+  {
+    "category": "memory",
+    "description": "Changes memory protection flags on a VMA range; flushes TLB entries as needed",
+    "symbol": "do_mprotect_pkey"
+  },
+  {
+    "category": "syscall",
+    "description": "Arms an hrtimer and suspends the calling thread until it fires or a signal arrives",
+    "symbol": "do_nanosleep"
+  },
+  {
+    "category": "filesystem",
+    "description": "VFS helper invoked after path lookup to open a file; validates permissions and calls do_dentry_open",
+    "symbol": "do_open"
+  },
+  {
+    "category": "filesystem",
+    "description": "Notifies a file system that a page is about to be written; used for journal reservations",
+    "symbol": "do_page_mkwrite"
+  },
+  {
+    "category": "syscall",
+    "description": "Implements poll(2) by calling each fd's poll() op and blocking if no events are ready",
+    "symbol": "do_poll"
+  },
+  {
+    "category": "syscall",
+    "description": "Implements pselect6; swaps the signal mask, calls core_sys_select, restores the mask",
+    "symbol": "do_pselect"
+  },
+  {
+    "category": "memory",
+    "description": "Handles a read fault on a file-backed mapping; calls the VMA's fault handler",
+    "symbol": "do_read_fault"
+  },
+  {
+    "category": "filesystem",
+    "description": "Renames a file; locks both parent directories and atomically updates the dentry tree",
+    "symbol": "do_renameat2"
+  },
+  {
+    "category": "scheduler",
+    "description": "Implements sched_yield(); dequeues the current task and re-enqueues it at the tail",
+    "symbol": "do_sched_yield"
+  },
+  {
+    "category": "syscall",
+    "description": "Core select(2) implementation; polls fd sets and sleeps until events fire or timeout",
+    "symbol": "do_select"
+  },
+  {
+    "category": "interrupt",
+    "description": "Entry point for softirq processing from process context; calls handle_softirqs",
+    "symbol": "do_softirq"
+  },
+  {
+    "category": "filesystem",
+    "description": "Queries extended file attributes; delegates to vfs_statx after resolving the path",
+    "symbol": "do_statx"
+  },
+  {
+    "category": "filesystem",
+    "description": "Kernel body of openat2(2); resolves the path and creates or opens the file with extended flags",
+    "symbol": "do_sys_openat2"
+  },
+  {
+    "category": "syscall",
+    "description": "Sets up the poll_wqueues table and calls do_poll; handles timeout conversion",
+    "symbol": "do_sys_poll"
+  },
+  {
+    "category": "syscall",
+    "description": "C entry point for syscalls; looks up the syscall number in sys_call_table and dispatches",
+    "symbol": "do_syscall_64"
+  },
+  {
+    "category": "memory",
+    "description": "Handles a page fault in userspace; locks the mmap, finds the VMA, calls handle_mm_fault",
+    "symbol": "do_user_addr_fault"
+  },
+  {
+    "category": "memory",
+    "description": "Handles a write-protect fault; either breaks COW by copying the page or reuses it",
+    "symbol": "do_wp_page"
+  },
+  {
+    "category": "filesystem",
+    "description": "Calls the address space's writepages op to flush dirty pages; used by writeback",
+    "symbol": "do_writepages"
+  },
+  {
+    "category": "filesystem",
+    "description": "Imports the iovec from userspace and calls vfs_writev to perform the gather write",
+    "symbol": "do_writev"
+  },
+  {
+    "category": "locking",
+    "description": "Non-blocking rwsem read-lock attempt; returns 1 on success, 0 if a writer holds or is waiting for the lock",
+    "symbol": "down_read_trylock"
+  },
+  {
+    "category": "filesystem",
+    "description": "Drops a dentry reference; frees it when the count hits zero",
+    "symbol": "dput"
+  },
+  {
+    "category": "drm",
+    "description": "Validates a DRM atomic state change without committing it; used for TEST_ONLY ioctls",
+    "symbol": "drm_atomic_check_only"
+  },
+  {
+    "category": "drm",
+    "description": "Implements a page flip via the atomic commit path; schedules the new framebuffer",
+    "symbol": "drm_atomic_helper_page_flip"
+  },
+  {
+    "category": "drm",
+    "description": "Submits a DRM atomic commit asynchronously; returns before the flip completes",
+    "symbol": "drm_atomic_nonblocking_commit"
+  },
+  {
+    "category": "drm",
+    "description": "Frees a DRM framebuffer object after its last reference is dropped",
+    "symbol": "drm_framebuffer_free"
+  },
+  {
+    "category": "drm",
+    "description": "Removes a framebuffer from all planes and drops the user reference",
+    "symbol": "drm_framebuffer_remove"
+  },
+  {
+    "category": "drm",
+    "description": "Allocates a DRM framebuffer from a dumb buffer or GEM handle",
+    "symbol": "drm_internal_framebuffer_create"
+  },
+  {
+    "category": "drm",
+    "description": "Top-level DRM ioctl dispatcher; looks up the command in drm_ioctls[] and calls the handler",
+    "symbol": "drm_ioctl"
+  },
+  {
+    "category": "drm",
+    "description": "Validates DRM ioctl permissions and calls the kernel-internal ioctl function",
+    "symbol": "drm_ioctl_kernel"
+  },
+  {
+    "category": "drm",
+    "description": "Inserts a node into the DRM memory manager's range allocator",
+    "symbol": "drm_mm_insert_node_in_range"
+  },
+  {
+    "category": "drm",
+    "description": "Creates a framebuffer from a GEM handle with format and modifier information",
+    "symbol": "drm_mode_addfb2"
+  },
+  {
+    "category": "drm",
+    "description": "ioctl handler for DRM_IOCTL_MODE_ADDFB2; calls drm_mode_addfb2",
+    "symbol": "drm_mode_addfb2_ioctl"
+  },
+  {
+    "category": "drm",
+    "description": "Drops a reference on a DRM mode object; frees it when the count hits zero",
+    "symbol": "drm_mode_object_put"
+  },
+  {
+    "category": "drm",
+    "description": "ioctl handler for DRM_IOCTL_MODE_PAGE_FLIP; queues a scanout buffer swap",
+    "symbol": "drm_mode_page_flip_ioctl"
+  },
+  {
+    "category": "drm",
+    "description": "Work function that destroys framebuffers deferred from atomic commit cleanup",
+    "symbol": "drm_mode_rmfb_work_fn"
+  },
+  {
+    "category": "drm",
+    "description": "Waits for an array of DRM sync objects to reach their target timeline points",
+    "symbol": "drm_syncobj_array_wait"
+  },
+  {
+    "category": "drm",
+    "description": "drm_syncobj_array_wait with a timeout; returns early if the deadline passes",
+    "symbol": "drm_syncobj_array_wait_timeout"
+  },
+  {
+    "category": "drm",
+    "description": "ioctl handler for DRM_IOCTL_SYNCOBJ_WAIT; waits on GPU sync object signals",
+    "symbol": "drm_syncobj_wait_ioctl"
+  },
+  {
+    "category": "drm",
+    "description": "Validates and pins the VMAs for all GEM objects in an i915 execbuffer submission",
+    "symbol": "eb_validate_vmas"
+  },
+  {
+    "category": "syscall",
+    "description": "Continues 64-bit syscall entry after saving the hardware frame; calls do_syscall_64",
+    "symbol": "entry_SYSCALL_64_after_hwframe"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "ep_done_scan"
+  },
+  {
+    "category": "syscall",
+    "description": "Calls the underlying fd's poll() op to check for readiness during epoll wait",
+    "symbol": "ep_item_poll"
+  },
+  {
+    "category": "syscall",
+    "description": "epoll_wait inner loop; blocks on a wait queue until an fd is ready or the timeout fires",
+    "symbol": "ep_poll"
+  },
+  {
+    "category": "syscall",
+    "description": "Transfers ready epoll events to userspace; re-arms level-triggered fds",
+    "symbol": "ep_send_events"
+  },
+  {
+    "category": "filesystem",
+    "description": "Evicts an inode from the inode cache; calls the filesystem's evict_inode op",
+    "symbol": "evict"
+  },
+  {
+    "category": "memory",
+    "description": "C handler for page faults; reads CR2 and calls do_user_addr_fault or do_kern_addr_fault",
+    "symbol": "exc_page_fault"
+  },
+  {
+    "category": "filesystem",
+    "description": "Submits dirty ext4 pages for writeback; manages extent and journal state",
+    "symbol": "ext4_do_writepages"
+  },
+  {
+    "category": "filesystem",
+    "description": "ext4 write-fault handler; starts a journal transaction before allowing a page write",
+    "symbol": "ext4_page_mkwrite"
+  },
+  {
+    "category": "filesystem",
+    "description": "Writeback entry for ext4; calls ext4_do_writepages with the writeback_control",
+    "symbol": "ext4_writepages"
+  },
+  {
+    "category": "filesystem",
+    "description": "Looks up a file struct by fd number with a lightweight reference; faster than fget",
+    "symbol": "fdget"
+  },
+  {
+    "category": "filesystem",
+    "description": "Like fdget but also locks the file position for seekable read/write operations",
+    "symbol": "fdget_pos"
+  },
+  {
+    "category": "network",
+    "description": "Looks up a node in an IPv6 FIB (routing) trie by destination address",
+    "symbol": "fib6_node_lookup"
+  },
+  {
+    "category": "network",
+    "description": "Inner recursive step of the IPv6 FIB trie lookup",
+    "symbol": "fib6_node_lookup_1"
+  },
+  {
+    "category": "network",
+    "description": "Iterates IPv6 routing policy rules to find the correct table for a route lookup",
+    "symbol": "fib6_rule_lookup"
+  },
+  {
+    "category": "network",
+    "description": "Looks up a route in a specific IPv6 FIB table",
+    "symbol": "fib6_table_lookup"
+  },
+  {
+    "category": "tty",
+    "description": "VFS write handler for TTY devices; calls iterate_tty_write",
+    "symbol": "file_tty_write"
+  },
+  {
+    "category": "filesystem",
+    "description": "Removes a folio from the page cache and LRU list; called during truncation and eviction",
+    "symbol": "filemap_remove_folio"
+  },
+  {
+    "category": "filesystem",
+    "description": "Resolves a filename string to a path; calls link_path_walk for each component",
+    "symbol": "filename_lookup"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "filp_flush"
+  },
+  {
+    "category": "filesystem",
+    "description": "Finds and locks page cache entries in a range; used during truncation and hole-punching",
+    "symbol": "find_lock_entries"
+  },
+  {
+    "category": "memory",
+    "description": "Finds the VMA containing or following a given address using the maple tree",
+    "symbol": "find_vma"
+  },
+  {
+    "category": "memory",
+    "description": "Finds the VMA containing an address and its predecessor; used during mmap operations",
+    "symbol": "find_vma_prev"
+  },
+  {
+    "category": "scheduler",
+    "description": "Completes a context switch; releases the previous task's locks and handles TLB cleanup",
+    "symbol": "finish_task_switch"
+  },
+  {
+    "category": "cgroup",
+    "description": "Deferred work to flush per-CPU memory cgroup stats into the global counters",
+    "symbol": "flush_memcg_stats_dwork"
+  },
+  {
+    "category": "interrupt",
+    "description": "Executes pending cross-CPU function calls queued by smp_call_function",
+    "symbol": "flush_smp_call_function_queue"
+  },
+  {
+    "category": "memory",
+    "description": "Sends TLB flush IPIs to all CPUs that have mapped the given address range",
+    "symbol": "flush_tlb_mm_range"
+  },
+  {
+    "category": "process",
+    "description": "Waits synchronously for a work item to complete; used to serialize against workqueue callbacks",
+    "symbol": "flush_work"
+  },
+  {
+    "category": "memory",
+    "description": "Adds a folio to the per-CPU LRU cache; flushes the cache to the global LRU when full",
+    "symbol": "folio_add_lru"
+  },
+  {
+    "category": "memory",
+    "description": "Adds a folio to the LRU with VMA hints for better memory placement decisions",
+    "symbol": "folio_add_lru_vma"
+  },
+  {
+    "category": "memory",
+    "description": "Adds a new anonymous folio to the reverse map; called on first fault of an anon page",
+    "symbol": "folio_add_new_anon_rmap"
+  },
+  {
+    "category": "memory",
+    "description": "Allocates a folio respecting NUMA memory policy without profiling overhead",
+    "symbol": "folio_alloc_mpol_noprof"
+  },
+  {
+    "category": "memory",
+    "description": "Moves a batch of folios from the per-CPU pagevec to the appropriate LRU list",
+    "symbol": "folio_batch_move_lru"
+  },
+  {
+    "category": "filesystem",
+    "description": "Clears the dirty flag on a folio before writing it to disk",
+    "symbol": "folio_clear_dirty_for_io"
+  },
+  {
+    "category": "memory",
+    "description": "Removes write permission from all PTEs mapping a folio; used before writeback",
+    "symbol": "folio_mkclean"
+  },
+  {
+    "category": "misc",
+    "description": "Parses a printf format specifier; returns the conversion type and width/precision",
+    "symbol": "format_decode"
+  },
+  {
+    "category": "filesystem",
+    "description": "Drops a reference to a file struct; schedules __fput via task_work if at zero",
+    "symbol": "fput"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "fq_flush_iotlb"
+  },
+  {
+    "category": "network",
+    "description": "Flushes the FQ qdisc's pending packet queue when the flow timer expires",
+    "symbol": "fq_flush_timeout"
+  },
+  {
+    "category": "drm",
+    "description": "Releases a GPU framebuffer frontbuffer reference; may trigger display update",
+    "symbol": "frontbuffer_release"
+  },
+  {
+    "category": "locking",
+    "description": "Hashes a futex address to a hash bucket; key is derived from the virtual or physical address",
+    "symbol": "futex_hash"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "futex_q_lock"
+  },
+  {
+    "category": "locking",
+    "description": "Validates the futex value then blocks the thread until woken or timed out",
+    "symbol": "futex_wait"
+  },
+  {
+    "category": "locking",
+    "description": "Places the thread on the futex hash bucket wait queue and suspends it",
+    "symbol": "futex_wait_queue"
+  },
+  {
+    "category": "locking",
+    "description": "Locks the futex hash bucket and verifies the uaddr value before blocking",
+    "symbol": "futex_wait_setup"
+  },
+  {
+    "category": "locking",
+    "description": "Wakes up to N threads blocked on a futex address",
+    "symbol": "futex_wake"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "futex_wake_mark"
+  },
+  {
+    "category": "syscall",
+    "description": "Reads the current value of an interval timer into an itimerval struct",
+    "symbol": "get_itimerval"
+  },
+  {
+    "category": "cgroup",
+    "description": "Returns the memory cgroup associated with a process's mm_struct",
+    "symbol": "get_mem_cgroup_from_mm"
+  },
+  {
+    "category": "memory",
+    "description": "Buddy allocator fast path; scans zone freelists and returns a page block",
+    "symbol": "get_page_from_freelist"
+  },
+  {
+    "category": "cgroup",
+    "description": "Reads recent CPU time statistics; used by /proc/stat and cgroup cpu accounting",
+    "symbol": "get_recent_times"
+  },
+  {
+    "category": "process",
+    "description": "Dequeues a pending signal for the current task; called on return to userspace",
+    "symbol": "get_signal"
+  },
+  {
+    "category": "misc",
+    "description": "Returns the byte offset of a symbol within the compressed kallsyms name table",
+    "symbol": "get_symbol_offset"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "getname"
+  },
+  {
+    "category": "filesystem",
+    "description": "Copies a filename string from userspace into a kernel name_struct with length check",
+    "symbol": "getname_flags"
+  },
+  {
+    "category": "memory",
+    "description": "Entry point for userspace page faults; calls __handle_mm_fault after checking permissions",
+    "symbol": "handle_mm_fault"
+  },
+  {
+    "category": "memory",
+    "description": "Resolves a PTE-level fault: anonymous page, file-backed page, or copy-on-write",
+    "symbol": "handle_pte_fault"
+  },
+  {
+    "category": "interrupt",
+    "description": "Processes all pending softirq vectors (NET_RX, TASKLET, TIMER, etc.) in a loop",
+    "symbol": "handle_softirqs"
+  },
+  {
+    "category": "interrupt",
+    "description": "Returns true if the hrtimer is queued or currently running its callback",
+    "symbol": "hrtimer_active"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "hrtimer_init_sleeper"
+  },
+  {
+    "category": "interrupt",
+    "description": "Implements nanosleep via hrtimer; arms the timer and calls do_nanosleep",
+    "symbol": "hrtimer_nanosleep"
+  },
+  {
+    "category": "interrupt",
+    "description": "Arms a sleeper hrtimer with the requested absolute or relative expiry time",
+    "symbol": "hrtimer_sleeper_start_expires"
+  },
+  {
+    "category": "interrupt",
+    "description": "Arms a high-resolution timer with a slack range; used for sleep and timeout operations",
+    "symbol": "hrtimer_start_range_ns"
+  },
+  {
+    "category": "interrupt",
+    "description": "Attempts to cancel an armed hrtimer; returns -1 if the callback is already running",
+    "symbol": "hrtimer_try_to_cancel"
+  },
+  {
+    "category": "drm",
+    "description": "Validates and submits a GPU command buffer; pins objects and builds the batch",
+    "symbol": "i915_gem_do_execbuffer"
+  },
+  {
+    "category": "drm",
+    "description": "ioctl handler for DRM_IOCTL_I915_GEM_EXECBUFFER2; calls i915_gem_do_execbuffer",
+    "symbol": "i915_gem_execbuffer2_ioctl"
+  },
+  {
+    "category": "drm",
+    "description": "Allocates a GEM buffer object in a specific memory region with given flags",
+    "symbol": "i915_gem_object_create_region"
+  },
+  {
+    "category": "drm",
+    "description": "Creates a GEM object backed by stolen display memory reserved at boot",
+    "symbol": "i915_gem_object_create_stolen"
+  },
+  {
+    "category": "drm",
+    "description": "ioctl to move a GEM object to CPU or GPU domain; handles cache flushing",
+    "symbol": "i915_gem_set_domain_ioctl"
+  },
+  {
+    "category": "idle",
+    "description": "Returns true if the given CPU is currently running the idle task",
+    "symbol": "idle_cpu"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "idr_find"
+  },
+  {
+    "category": "syscall",
+    "description": "Imports a userspace iovec array into a kernel iov_iter for use in read/write paths",
+    "symbol": "import_iovec"
+  },
+  {
+    "category": "syscall",
+    "description": "Imports a single userspace buffer as a single-element iov_iter",
+    "symbol": "import_ubuf"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "inode_permission"
+  },
+  {
+    "category": "drm",
+    "description": "Validates an Intel DRM atomic state change; checks bandwidth, watermarks, and clocks",
+    "symbol": "intel_atomic_check"
+  },
+  {
+    "category": "drm",
+    "description": "Duplicates the global display state object for modification in an atomic commit",
+    "symbol": "intel_atomic_get_global_obj_state"
+  },
+  {
+    "category": "drm",
+    "description": "Computes display watermark levels for all active pipes in an atomic state",
+    "symbol": "intel_compute_global_watermarks"
+  },
+  {
+    "category": "drm",
+    "description": "Creates a Display Page Table for GPU-accessed framebuffers on Intel hardware",
+    "symbol": "intel_dpt_create"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "intel_flush_iotlb_all"
+  },
+  {
+    "category": "drm",
+    "description": "Creates an Intel-specific framebuffer; wraps drm_internal_framebuffer_create",
+    "symbol": "intel_framebuffer_create"
+  },
+  {
+    "category": "drm",
+    "description": "Initializes an Intel framebuffer object; validates tiling and format parameters",
+    "symbol": "intel_framebuffer_init"
+  },
+  {
+    "category": "drm",
+    "description": "Releases an Intel frontbuffer reference; flushes if the display needs an update",
+    "symbol": "intel_frontbuffer_put"
+  },
+  {
+    "category": "dma",
+    "description": "Maps pages into the Intel IOMMU page tables for DMA access",
+    "symbol": "intel_iommu_map_pages"
+  },
+  {
+    "category": "drm",
+    "description": "Entry point for Intel framebuffer creation from a userspace GEM handle",
+    "symbol": "intel_user_framebuffer_create"
+  },
+  {
+    "category": "drm",
+    "description": "Destroys an Intel framebuffer; unpins the GEM object and frees the struct",
+    "symbol": "intel_user_framebuffer_destroy"
+  },
+  {
+    "category": "dma",
+    "description": "Maps a scatter-gather list through the IOMMU DMA layer for device access",
+    "symbol": "iommu_dma_map_sg"
+  },
+  {
+    "category": "dma",
+    "description": "Maps a scatter-gather list into IOMMU page tables; creates contiguous IOVA mappings",
+    "symbol": "iommu_map_sg"
+  },
+  {
+    "category": "network",
+    "description": "Finishes IPv6 receive for a list of packets after routing lookup",
+    "symbol": "ip6_list_rcv_finish"
+  },
+  {
+    "category": "network",
+    "description": "Looks up an IPv6 route in a specific policy routing table",
+    "symbol": "ip6_pol_route"
+  },
+  {
+    "category": "network",
+    "description": "IPv6 policy route lookup for incoming packets",
+    "symbol": "ip6_pol_route_input"
+  },
+  {
+    "category": "network",
+    "description": "Performs the routing lookup for an IPv6 packet and delivers it to the next hop",
+    "symbol": "ip6_rcv_finish_core"
+  },
+  {
+    "category": "network",
+    "description": "Entry point for IPv6 input routing; selects the route for a received packet",
+    "symbol": "ip6_route_input"
+  },
+  {
+    "category": "network",
+    "description": "Processes a sublist of IPv6 packets with the same destination",
+    "symbol": "ip6_sublist_rcv"
+  },
+  {
+    "category": "filesystem",
+    "description": "Drops an inode reference; if the count hits zero, calls evict to free the inode",
+    "symbol": "iput"
+  },
+  {
+    "category": "network",
+    "description": "Receives a list of IPv6 packets from the device layer and calls ip6_rcv_finish_core",
+    "symbol": "ipv6_list_rcv"
+  },
+  {
+    "category": "interrupt",
+    "description": "RCU-aware IRQ exit; decrements preempt count and runs pending softirqs",
+    "symbol": "irq_exit_rcu"
+  },
+  {
+    "category": "interrupt",
+    "description": "Kernel thread that runs threaded IRQ handlers; waits for the hardirq to wake it",
+    "symbol": "irq_thread"
+  },
+  {
+    "category": "interrupt",
+    "description": "Calls the threaded IRQ handler function and handles return value checking",
+    "symbol": "irq_thread_fn"
+  },
+  {
+    "category": "interrupt",
+    "description": "Common IRQ/exception exit path; handles preemption and pending work before returning",
+    "symbol": "irqentry_exit"
+  },
+  {
+    "category": "interrupt",
+    "description": "Checks for pending signals, rescheduling, and syscall work before returning to userspace",
+    "symbol": "irqentry_exit_to_user_mode"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "iterate_dir"
+  },
+  {
+    "category": "tty",
+    "description": "Writes data to a TTY line discipline by iterating over an iov_iter",
+    "symbol": "iterate_tty_write"
+  },
+  {
+    "category": "wifi",
+    "description": "Looks up the notification version supported by the loaded Intel Wi-Fi firmware",
+    "symbol": "iwl_fw_lookup_notif_ver"
+  },
+  {
+    "category": "wifi",
+    "description": "RSS (Receive Side Scaling) receive handler for Intel Wi-Fi multi-queue mode",
+    "symbol": "iwl_mvm_rx_mq_rss"
+  },
+  {
+    "category": "wifi",
+    "description": "MSI-X interrupt handler for Intel Wi-Fi RX queues; wakes NAPI polling",
+    "symbol": "iwl_pcie_irq_rx_msix_handler"
+  },
+  {
+    "category": "wifi",
+    "description": "NAPI poll function for Intel Wi-Fi; processes received frames from the RX ring",
+    "symbol": "iwl_pcie_napi_poll_msix"
+  },
+  {
+    "category": "wifi",
+    "description": "Processes all received frames from an Intel Wi-Fi PCIe RX queue",
+    "symbol": "iwl_pcie_rx_handle"
+  },
+  {
+    "category": "wifi",
+    "description": "Handles a single Intel Wi-Fi PCIe receive buffer; parses and dispatches frames",
+    "symbol": "iwl_pcie_rx_handle_rb"
+  },
+  {
+    "category": "filesystem",
+    "description": "Commits a JBD2 journal transaction to disk; the core of ext4's journaling layer",
+    "symbol": "jbd2_journal_commit_transaction"
+  },
+  {
+    "category": "misc",
+    "description": "Decompresses a kernel symbol name from the compressed kallsyms table",
+    "symbol": "kallsyms_expand_symbol"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "kcompactd"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "kernfs_dir_pos"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "kernfs_fop_readdir"
+  },
+  {
+    "category": "filesystem",
+    "description": "Resolves a kernfs symlink; used by sysfs symlink nodes for device topology",
+    "symbol": "kernfs_iop_get_link"
+  },
+  {
+    "category": "memory",
+    "description": "Queues a VMA for transparent huge page collapse by the khugepaged daemon",
+    "symbol": "khugepaged_enter_vma"
+  },
+  {
+    "category": "filesystem",
+    "description": "JBD2 commit thread; wakes periodically to call jbd2_journal_commit_transaction",
+    "symbol": "kjournald2"
+  },
+  {
+    "category": "memory",
+    "description": "Allocates a slab object from a specific NUMA node without memory profiling overhead",
+    "symbol": "kmem_cache_alloc_node_noprof"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "kmem_cache_alloc_noprof"
+  },
+  {
+    "category": "memory",
+    "description": "Kernel body of mmap(2); validates parameters and calls do_mmap",
+    "symbol": "ksys_mmap_pgoff"
+  },
+  {
+    "category": "filesystem",
+    "description": "Kernel body of read(2); gets the file position, calls vfs_read, updates the offset",
+    "symbol": "ksys_read"
+  },
+  {
+    "category": "filesystem",
+    "description": "Kernel body of write(2); gets the file position, calls vfs_write, updates the offset",
+    "symbol": "ksys_write"
+  },
+  {
+    "category": "process",
+    "description": "Generic kernel thread entry point; calls the thread function then calls do_exit",
+    "symbol": "kthread"
+  },
+  {
+    "category": "process",
+    "description": "Returns true if the kthread has been asked to park (pause) itself",
+    "symbol": "kthread_should_park"
+  },
+  {
+    "category": "interrupt",
+    "description": "Returns the current monotonic time as a timespec64; used for nanosleep and timers",
+    "symbol": "ktime_get_ts64"
+  },
+  {
+    "category": "filesystem",
+    "description": "Resolves each component of a path string, following symlinks and mount points",
+    "symbol": "link_path_walk"
+  },
+  {
+    "category": "memory",
+    "description": "Locks the mmap read lock and finds the VMA for a faulting address",
+    "symbol": "lock_mm_and_find_vma"
+  },
+  {
+    "category": "memory",
+    "description": "Looks up a VMA under RCU read lock without taking the mmap lock",
+    "symbol": "lock_vma_under_rcu"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "locks_remove_posix"
+  },
+  {
+    "category": "filesystem",
+    "description": "Fast dentry lookup in the dcache hash table; avoids taking the directory inode lock",
+    "symbol": "lookup_fast"
+  },
+  {
+    "category": "memory",
+    "description": "Applies a single madvise hint to one VMA; called by madvise_walk_vmas",
+    "symbol": "madvise_vma_behavior"
+  },
+  {
+    "category": "memory",
+    "description": "Walks VMAs in an address range applying madvise operations to each one",
+    "symbol": "madvise_walk_vmas"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "map_lookup_elem"
+  },
+  {
+    "category": "filesystem",
+    "description": "Marks a buffer head as dirty; adds the page to the writeback dirty list",
+    "symbol": "mark_buffer_dirty"
+  },
+  {
+    "category": "memory",
+    "description": "Pushes data into a maple tree node during a store operation",
+    "symbol": "mas_push_data"
+  },
+  {
+    "category": "memory",
+    "description": "Splits a full maple tree node to make room for a new entry",
+    "symbol": "mas_split"
+  },
+  {
+    "category": "memory",
+    "description": "Stores an entry in a maple tree using pre-allocated nodes to avoid allocation failures",
+    "symbol": "mas_store_prealloc"
+  },
+  {
+    "category": "memory",
+    "description": "Walks a maple tree (the current VMA data structure) to find an entry by key",
+    "symbol": "mas_walk"
+  },
+  {
+    "category": "memory",
+    "description": "Writes to a maple tree B-tree node during a store walk",
+    "symbol": "mas_wr_bnode"
+  },
+  {
+    "category": "memory",
+    "description": "Stores an entry into the maple tree at the current walk position",
+    "symbol": "mas_wr_store_entry"
+  },
+  {
+    "category": "memory",
+    "description": "Fills a maple tree split node with data during a node split operation",
+    "symbol": "mast_fill_bnode"
+  },
+  {
+    "category": "filesystem",
+    "description": "Pre-open permission check; validates the requested access mode against inode flags and DAC/LSM policy",
+    "symbol": "may_open"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "mem_cgroup_handle_over_high"
+  },
+  {
+    "category": "idle",
+    "description": "cpuidle menu governor callback; updates predicted sleep duration after wakeup",
+    "symbol": "menu_reflect"
+  },
+  {
+    "category": "memory",
+    "description": "Sets up a VMA for a new mapping; calls the file's mmap op and inserts it into the mm",
+    "symbol": "mmap_region"
+  },
+  {
+    "category": "misc",
+    "description": "Looks up a symbol by index in a loaded kernel module's symbol table",
+    "symbol": "module_get_kallsym"
+  },
+  {
+    "category": "filesystem",
+    "description": "Prepares a contiguous range of dirty pages for block I/O submission",
+    "symbol": "mpage_prepare_extent_to_map"
+  },
+  {
+    "category": "filesystem",
+    "description": "Maps page buffer heads and builds bio requests for writeback",
+    "symbol": "mpage_process_page_bufs"
+  },
+  {
+    "category": "filesystem",
+    "description": "Submits a folio for writeback via the mpage infrastructure",
+    "symbol": "mpage_submit_folio"
+  },
+  {
+    "category": "memory",
+    "description": "Finds the first entry in a maple tree at or after a given index",
+    "symbol": "mt_find"
+  },
+  {
+    "category": "locking",
+    "description": "Acquires a mutex; spins briefly in the fastpath then sleeps if the lock is contended",
+    "symbol": "mutex_lock"
+  },
+  {
+    "category": "locking",
+    "description": "Releases a mutex; wakes the next waiter if the wait queue is non-empty",
+    "symbol": "mutex_unlock"
+  },
+  {
+    "category": "tty",
+    "description": "TTY line discipline poll; checks if the TTY has data to read or space to write",
+    "symbol": "n_tty_poll"
+  },
+  {
+    "category": "tty",
+    "description": "Writes data through the N_TTY line discipline; handles echo and output processing",
+    "symbol": "n_tty_write"
+  },
+  {
+    "category": "network",
+    "description": "Marks NAPI polling as done; re-enables the hardware interrupt if the budget is unused",
+    "symbol": "napi_complete_done"
+  },
+  {
+    "category": "memory",
+    "description": "Sends TLB invalidation IPIs to a set of CPUs using the native x86 mechanism",
+    "symbol": "native_flush_tlb_multi"
+  },
+  {
+    "category": "network",
+    "description": "NAPI softirq handler; polls all registered network devices for received packets",
+    "symbol": "net_rx_action"
+  },
+  {
+    "category": "network",
+    "description": "Delivers a list of received skbs to the protocol stack in a single pass",
+    "symbol": "netif_receive_skb_list_internal"
+  },
+  {
+    "category": "scheduler",
+    "description": "Triggers load balancing from the idle path when NO_HZ tickless idle is active",
+    "symbol": "nohz_run_idle_balance"
+  },
+  {
+    "category": "misc",
+    "description": "RCU grace-period bookkeeping; records state transitions (start, end) for the current grace period on a per-CPU basis",
+    "symbol": "note_gp_changes"
+  },
+  {
+    "category": "misc",
+    "description": "vsnprintf helper that formats an integer value with base, width, and sign options",
+    "symbol": "number"
+  },
+  {
+    "category": "block-io",
+    "description": "Maps NVMe command data buffers for DMA; builds PRPs or SGLs for the controller",
+    "symbol": "nvme_map_data"
+  },
+  {
+    "category": "block-io",
+    "description": "Prepares an NVMe request for submission; fills the command and maps data",
+    "symbol": "nvme_prep_rq"
+  },
+  {
+    "category": "block-io",
+    "description": "Queues an NVMe request to the submission queue; rings the doorbell",
+    "symbol": "nvme_queue_rq"
+  },
+  {
+    "category": "cgroup",
+    "description": "Charges a slab object allocation to an object cgroup for memory accounting",
+    "symbol": "obj_cgroup_charge"
+  },
+  {
+    "category": "interrupt",
+    "description": "Runs a function on each CPU in a mask where a condition holds; uses IPIs",
+    "symbol": "on_each_cpu_cond_mask"
+  },
+  {
+    "category": "filesystem",
+    "description": "Performs the final path component lookup during open; handles creation and O_EXCL",
+    "symbol": "open_last_lookups"
+  },
+  {
+    "category": "memory",
+    "description": "Returns the P4D entry for a virtual address; part of the 5-level page table walk",
+    "symbol": "p4d_offset"
+  },
+  {
+    "category": "cgroup",
+    "description": "Atomically increments a page counter; fails if the limit would be exceeded",
+    "symbol": "page_counter_try_charge"
+  },
+  {
+    "category": "memory",
+    "description": "Clears write permission on one PTE mapping a page; helper for folio_mkclean",
+    "symbol": "page_mkclean_one"
+  },
+  {
+    "category": "memory",
+    "description": "Clears write permission on one PTE in a VMA for a given page; used before writeback",
+    "symbol": "page_vma_mkclean_one"
+  },
+  {
+    "category": "filesystem",
+    "description": "Resolves a full path to a dentry/inode pair; calls link_path_walk and final lookup",
+    "symbol": "path_lookupat"
+  },
+  {
+    "category": "filesystem",
+    "description": "Opens a file path; calls path_lookupat and then do_filp_open to create the file struct",
+    "symbol": "path_openat"
+  },
+  {
+    "category": "misc",
+    "description": "Page fault handler for perf ring buffer mmaps; maps the ring buffer pages on demand",
+    "symbol": "perf_mmap_fault"
+  },
+  {
+    "category": "misc",
+    "description": "poll() handler for perf event fds; wakes when the ring buffer has unread data",
+    "symbol": "perf_poll"
+  },
+  {
+    "category": "memory",
+    "description": "Returns true if a PGD entry is not present; used during page table walks",
+    "symbol": "pgd_none"
+  },
+  {
+    "category": "filesystem",
+    "description": "Picks up a symlink during path resolution; pushes it onto the link stack",
+    "symbol": "pick_link"
+  },
+  {
+    "category": "filesystem",
+    "description": "Writes data into a kernel pipe; wakes readers and blocks if the pipe buffer is full",
+    "symbol": "pipe_write"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "plist_add"
+  },
+  {
+    "category": "misc",
+    "description": "vsnprintf helper that formats a pointer value (%p); dispatches to type-specific printers",
+    "symbol": "pointer"
+  },
+  {
+    "category": "idle",
+    "description": "cpuidle polling state; busy-waits for a short time before entering a deeper C-state",
+    "symbol": "poll_idle"
+  },
+  {
+    "category": "syscall",
+    "description": "Fills a seccomp_data struct with syscall number and arguments for filter evaluation",
+    "symbol": "populate_seccomp_data"
+  },
+  {
+    "category": "filesystem",
+    "description": "Generates the content of /proc/PID/status; reports memory, state, and signal info",
+    "symbol": "proc_pid_status"
+  },
+  {
+    "category": "filesystem",
+    "description": "Read handler for procfs files registered via proc_create; calls the file's read_iter op",
+    "symbol": "proc_reg_read"
+  },
+  {
+    "category": "filesystem",
+    "description": "seq_file show callback for single-value /proc files; calls the registered show fn",
+    "symbol": "proc_single_show"
+  },
+  {
+    "category": "process",
+    "description": "Executes a single work_struct callback from a kernel workqueue thread",
+    "symbol": "process_one_work"
+  },
+  {
+    "category": "tty",
+    "description": "Writes a block of output to a TTY; handles pacing and flow control",
+    "symbol": "process_output_block"
+  },
+  {
+    "category": "cgroup",
+    "description": "Deferred work to update pressure stall information averages for PSI tracking",
+    "symbol": "psi_avgs_work"
+  },
+  {
+    "category": "memory",
+    "description": "Clears a PTE and flushes the corresponding TLB entry on all relevant CPUs",
+    "symbol": "ptep_clear_flush"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "queue_work_on"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "radix_tree_lookup"
+  },
+  {
+    "category": "interrupt",
+    "description": "Processes RCU callbacks that have passed their grace period; called from softirq",
+    "symbol": "rcu_core"
+  },
+  {
+    "category": "interrupt",
+    "description": "Softirq entry for RCU core processing; calls rcu_core from the softirq context",
+    "symbol": "rcu_core_si"
+  },
+  {
+    "category": "interrupt",
+    "description": "Invokes a batch of RCU callbacks whose grace periods have elapsed",
+    "symbol": "rcu_do_batch"
+  },
+  {
+    "category": "interrupt",
+    "description": "Initializes a new RCU grace period; wakes readers and sets up quiescent state tracking",
+    "symbol": "rcu_gp_init"
+  },
+  {
+    "category": "interrupt",
+    "description": "RCU grace period kernel thread; drives grace period state machine and wakes callbacks",
+    "symbol": "rcu_gp_kthread"
+  },
+  {
+    "category": "misc",
+    "description": "Wakes the RCU grace-period kthread when callbacks are pending and a new grace period needs to begin",
+    "symbol": "rcu_gp_kthread_wake"
+  },
+  {
+    "category": "misc",
+    "description": "Reads the CPU timestamp counter; used for fast time sampling in tracing and profiling",
+    "symbol": "read_tsc"
+  },
+  {
+    "category": "cgroup",
+    "description": "Refills the per-task memory cgroup charge stock from the global pool",
+    "symbol": "refill_stock"
+  },
+  {
+    "category": "memory",
+    "description": "Drains per-CPU VM statistics counters into the global zone page state",
+    "symbol": "refresh_cpu_vm_stats"
+  },
+  {
+    "category": "filesystem",
+    "description": "Frees a snapshot of a dentry name taken during a rename operation",
+    "symbol": "release_dentry_name_snapshot"
+  },
+  {
+    "category": "process",
+    "description": "Called by start_kernel after early init; creates init and kthreadd threads, then idles",
+    "symbol": "rest_init"
+  },
+  {
+    "category": "process",
+    "description": "Entry point for newly forked tasks; completes kernel-side setup and returns to userspace",
+    "symbol": "ret_from_fork"
+  },
+  {
+    "category": "process",
+    "description": "Assembly trampoline for new threads/processes; calls ret_from_fork then IRET",
+    "symbol": "ret_from_fork_asm"
+  },
+  {
+    "category": "memory",
+    "description": "Walks all PTEs mapping a file-backed page to perform reverse mapping operations",
+    "symbol": "rmap_walk_file"
+  },
+  {
+    "category": "process",
+    "description": "Reads the restartable sequence critical section descriptor from userspace",
+    "symbol": "rseq_get_rseq_cs"
+  },
+  {
+    "category": "process",
+    "description": "Fixes up the instruction pointer after a restartable sequence is interrupted",
+    "symbol": "rseq_ip_fixup"
+  },
+  {
+    "category": "process",
+    "description": "Updates the current CPU and NUMA node ID in the task's rseq struct on context switch",
+    "symbol": "rseq_update_cpu_node_id"
+  },
+  {
+    "category": "interrupt",
+    "description": "Main loop of the ksoftirqd thread; processes softirqs that exceeded their budget",
+    "symbol": "run_ksoftirqd"
+  },
+  {
+    "category": "interrupt",
+    "description": "Softirq handler for expired kernel timers; fires callbacks from the timer wheel",
+    "symbol": "run_timer_softirq"
+  },
+  {
+    "category": "filesystem",
+    "description": "seq_file iterator next() for /proc files; advances to the next entry in the sequence",
+    "symbol": "s_next"
+  },
+  {
+    "category": "filesystem",
+    "description": "seq_file show() for /proc files; formats the current entry into the seq_file buffer",
+    "symbol": "s_show"
+  },
+  {
+    "category": "filesystem",
+    "description": "seq_file start() for /proc files; positions the iterator at the requested offset",
+    "symbol": "s_start"
+  },
+  {
+    "category": "scheduler",
+    "description": "Iterates scheduler domains top-down triggering load balancing at each level",
+    "symbol": "sched_balance_domains"
+  },
+  {
+    "category": "scheduler",
+    "description": "Finds the busiest scheduling group to pull tasks from during load balance",
+    "symbol": "sched_balance_find_src_group"
+  },
+  {
+    "category": "scheduler",
+    "description": "Pulls tasks from a busier runqueue to rebalance load across CPUs in a domain",
+    "symbol": "sched_balance_rq"
+  },
+  {
+    "category": "scheduler",
+    "description": "SCHED_SOFTIRQ handler; triggers periodic load balancing across CPUs",
+    "symbol": "sched_balance_softirq"
+  },
+  {
+    "category": "scheduler",
+    "description": "Updates blocked (sleeping) task load averages before a balance pass",
+    "symbol": "sched_balance_update_blocked_averages"
+  },
+  {
+    "category": "scheduler",
+    "description": "Core scheduler entry; picks the highest-priority runnable thread and switches to it",
+    "symbol": "schedule"
+  },
+  {
+    "category": "scheduler",
+    "description": "Debug checks before scheduling; verifies IRQ state and scheduling invariants",
+    "symbol": "schedule_debug"
+  },
+  {
+    "category": "scheduler",
+    "description": "Sleeps until an hrtimer fires within a slack range; used by poll and epoll timeouts",
+    "symbol": "schedule_hrtimeout_range"
+  },
+  {
+    "category": "scheduler",
+    "description": "Like schedule_hrtimeout_range but takes an explicit clock source (MONOTONIC/REALTIME)",
+    "symbol": "schedule_hrtimeout_range_clock"
+  },
+  {
+    "category": "scheduler",
+    "description": "Lightweight scheduler entry from the idle thread; switches away only if a task is runnable",
+    "symbol": "schedule_idle"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "schedule_timeout"
+  },
+  {
+    "category": "syscall",
+    "description": "Estimates the wakeup accuracy needed for a select/poll timeout to guide hrtimer slack",
+    "symbol": "select_estimate_accuracy"
+  },
+  {
+    "category": "filesystem",
+    "description": "Appends a formatted string to a seq_file buffer; used to implement /proc file output",
+    "symbol": "seq_printf"
+  },
+  {
+    "category": "filesystem",
+    "description": "Appends an unsigned decimal integer to a seq_file buffer; faster than seq_printf",
+    "symbol": "seq_put_decimal_ull"
+  },
+  {
+    "category": "filesystem",
+    "description": "Like seq_put_decimal_ull but pads the output to a minimum width",
+    "symbol": "seq_put_decimal_ull_width"
+  },
+  {
+    "category": "filesystem",
+    "description": "read() handler for seq_file; fills the read buffer by calling start/next/show/stop",
+    "symbol": "seq_read"
+  },
+  {
+    "category": "filesystem",
+    "description": "iov_iter variant of seq_read; feeds seq_file output into a scatter-gather iterator",
+    "symbol": "seq_read_iter"
+  },
+  {
+    "category": "drm",
+    "description": "Inserts a shmem/tmpfs folio into the page cache and the swap address space",
+    "symbol": "shmem_add_to_page_cache"
+  },
+  {
+    "category": "drm",
+    "description": "Allocates a new folio for a tmpfs file and adds it to the page cache",
+    "symbol": "shmem_alloc_and_add_folio"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "shmem_alloc_folio"
+  },
+  {
+    "category": "drm",
+    "description": "Evicts a shmem inode; truncates its pages and frees the inode structure",
+    "symbol": "shmem_evict_inode"
+  },
+  {
+    "category": "drm",
+    "description": "Looks up or allocates a folio for a tmpfs page with given GFP flags",
+    "symbol": "shmem_get_folio_gfp"
+  },
+  {
+    "category": "drm",
+    "description": "Retrieves the pages backing a shmem GEM object; allocates them if not present",
+    "symbol": "shmem_get_pages"
+  },
+  {
+    "category": "drm",
+    "description": "Reads a folio from a tmpfs file into the page cache with given GFP flags",
+    "symbol": "shmem_read_folio_gfp"
+  },
+  {
+    "category": "drm",
+    "description": "Builds a scatter-gather table for a shmem-backed GEM object's pages",
+    "symbol": "shmem_sg_alloc_table"
+  },
+  {
+    "category": "drm",
+    "description": "Removes pages from a tmpfs file in a given range; called during truncation",
+    "symbol": "shmem_undo_range"
+  },
+  {
+    "category": "scheduler",
+    "description": "Determines whether this CPU should perform load balancing in the current domain",
+    "symbol": "should_we_balance"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "simple_copy_to_iter"
+  },
+  {
+    "category": "network",
+    "description": "Copies data from an iov_iter into a socket buffer's data area",
+    "symbol": "skb_copy_datagram_from_iter"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "skb_copy_datagram_iter"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "skb_release_head_state"
+  },
+  {
+    "category": "network",
+    "description": "Associates an skb with a socket's write buffer and charges it against the socket's sndbuf",
+    "symbol": "skb_set_owner_w"
+  },
+  {
+    "category": "drm",
+    "description": "Computes display watermarks for Skylake and later Intel GPUs",
+    "symbol": "skl_compute_wm"
+  },
+  {
+    "category": "interrupt",
+    "description": "Sends an IPI to multiple CPUs to execute a function; skips CPUs failing the condition",
+    "symbol": "smp_call_function_many_cond"
+  },
+  {
+    "category": "process",
+    "description": "Main loop for CPU hotplug and smpboot service threads; handles park/unpark",
+    "symbol": "smpboot_thread_fn"
+  },
+  {
+    "category": "network",
+    "description": "Allocates an skb for a socket send path; blocks if the socket send buffer is full",
+    "symbol": "sock_alloc_send_pskb"
+  },
+  {
+    "category": "network",
+    "description": "Generic socket poll; calls the protocol's poll op to check readiness",
+    "symbol": "sock_poll"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "sock_recvmsg"
+  },
+  {
+    "category": "network",
+    "description": "write() path for sockets via VFS; calls sock_sendmsg with a kernel iov_iter",
+    "symbol": "sock_write_iter"
+  },
+  {
+    "category": "process",
+    "description": "Initiates a flush of a work item; sets up a barrier work to detect completion",
+    "symbol": "start_flush_work"
+  },
+  {
+    "category": "process",
+    "description": "Main kernel C entry point; initializes all subsystems then calls rest_init",
+    "symbol": "start_kernel"
+  },
+  {
+    "category": "process",
+    "description": "Entry point for non-boot CPUs after SIPI; initializes per-CPU state and enters the idle loop",
+    "symbol": "start_secondary"
+  },
+  {
+    "category": "filesystem",
+    "description": "Steps into the next path component during resolution; handles mounts and symlinks",
+    "symbol": "step_into"
+  },
+  {
+    "category": "misc",
+    "description": "vsnprintf helper that formats a %s string argument with width and precision handling",
+    "symbol": "string"
+  },
+  {
+    "category": "misc",
+    "description": "Computes the length of a null-terminated string; optimized with SIMD on x86",
+    "symbol": "strlen"
+  },
+  {
+    "category": "syscall",
+    "description": "Copies a null-terminated string from userspace with a maximum length bound",
+    "symbol": "strncpy_from_user"
+  },
+  {
+    "category": "block-io",
+    "description": "Submits a buffer head for I/O; maps it to a bio and calls submit_bio",
+    "symbol": "submit_bh"
+  },
+  {
+    "category": "block-io",
+    "description": "submit_bh with writeback control hints for throttling and accounting",
+    "symbol": "submit_bh_wbc"
+  },
+  {
+    "category": "block-io",
+    "description": "Top-level block I/O submission; calls blkcg throttle and blk_mq_submit_bio",
+    "symbol": "submit_bio"
+  },
+  {
+    "category": "block-io",
+    "description": "Submits a bio bypassing accounting; used for stacked devices that re-submit bios",
+    "symbol": "submit_bio_noacct"
+  },
+  {
+    "category": "block-io",
+    "description": "submit_bio_noacct without integrity or bounds checking; used by trusted callers",
+    "symbol": "submit_bio_noacct_nocheck"
+  },
+  {
+    "category": "locking",
+    "description": "Wakes one waiter on a simple wait queue (swait); lighter than the full waitqueue mechanism, used in RCU and other hot paths",
+    "symbol": "swake_up_one"
+  },
+  {
+    "category": "locking",
+    "description": "Like swake_up_one but skips waiters on offline CPUs; used to avoid waking threads that cannot run",
+    "symbol": "swake_up_one_online"
+  },
+  {
+    "category": "syscall",
+    "description": "Runs pending work (signals, rescheduling) before returning to userspace via SYSRET",
+    "symbol": "syscall_exit_to_user_mode"
+  },
+  {
+    "category": "syscall",
+    "description": "Called on syscall entry when ptrace or seccomp is active; fires tracepoints",
+    "symbol": "syscall_trace_enter"
+  },
+  {
+    "category": "interrupt",
+    "description": "C handler for the local APIC timer interrupt; calls hrtimer_interrupt and scheduler_tick",
+    "symbol": "sysvec_apic_timer_interrupt"
+  },
+  {
+    "category": "interrupt",
+    "description": "C handler for single-CPU IPI; executes the queued function on this CPU",
+    "symbol": "sysvec_call_function_single"
+  },
+  {
+    "category": "interrupt",
+    "description": "C handler for reschedule IPI; sets TIF_NEED_RESCHED to trigger a scheduler run",
+    "symbol": "sysvec_reschedule_ipi"
+  },
+  {
+    "category": "process",
+    "description": "Deferred work to reclaim unused per-CPU mm_cid slots after task migration",
+    "symbol": "task_mm_cid_work"
+  },
+  {
+    "category": "filesystem",
+    "description": "Formats a task's state (R/S/D/Z/T) for /proc/PID/status output",
+    "symbol": "task_state"
+  },
+  {
+    "category": "process",
+    "description": "Runs task_work callbacks queued on the current task (used for io_uring, signals, etc.)",
+    "symbol": "task_work_run"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "tcp_orphan_count_sum"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "tcp_orphan_update"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "thread_stack_free_rcu"
+  },
+  {
+    "category": "idle",
+    "description": "Stops the periodic tick when a CPU enters tickless idle mode",
+    "symbol": "tick_nohz_idle_enter"
+  },
+  {
+    "category": "idle",
+    "description": "Re-enables the periodic tick when a CPU leaves tickless idle",
+    "symbol": "tick_nohz_idle_exit"
+  },
+  {
+    "category": "idle",
+    "description": "Records that a tick arrived while in NO_HZ idle; used for idle time accounting",
+    "symbol": "tick_nohz_idle_got_tick"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "timer_expire_remote"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "timerfd_poll"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "tmigr_handle_remote"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "tmigr_handle_remote_cpu"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "tmigr_handle_remote_up"
+  },
+  {
+    "category": "filesystem",
+    "description": "Truncates a single folio from an inode during file truncation or hole-punching",
+    "symbol": "truncate_inode_folio"
+  },
+  {
+    "category": "cgroup",
+    "description": "Tries to charge memory to a cgroup; enforces limits and may trigger reclaim or OOM",
+    "symbol": "try_charge_memcg"
+  },
+  {
+    "category": "scheduler",
+    "description": "Wakes a sleeping task; sets state to TASK_RUNNING and enqueues it on the target CPU",
+    "symbol": "try_to_wake_up"
+  },
+  {
+    "category": "tty",
+    "description": "Work function that flushes pending TTY buffer data to the line discipline",
+    "symbol": "tty_buffer_flush_work"
+  },
+  {
+    "category": "tty",
+    "description": "TTY file poll; delegates to the line discipline's poll op",
+    "symbol": "tty_poll"
+  },
+  {
+    "category": "tty",
+    "description": "VFS write for TTY files; applies output processing and calls the line discipline",
+    "symbol": "tty_write"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "unix_destruct_scm"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "unix_scm_to_skb"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "unix_stream_read_actor"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "unix_stream_read_generic"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "unix_stream_recvmsg"
+  },
+  {
+    "category": "network",
+    "description": "Sends data on a AF_UNIX stream socket; copies to the peer's receive queue directly",
+    "symbol": "unix_stream_sendmsg"
+  },
+  {
+    "category": "memory",
+    "description": "Unmaps a range of pages from a VMA; tears down PTEs and triggers TLB shootdown",
+    "symbol": "unmap_page_range"
+  },
+  {
+    "category": "memory",
+    "description": "Unmaps all pages in a single VMA; calls unmap_page_range for the full range",
+    "symbol": "unmap_single_vma"
+  },
+  {
+    "category": "scheduler",
+    "description": "Updates a CPU's capacity estimate based on frequency scaling and thermal state",
+    "symbol": "update_cpu_capacity"
+  },
+  {
+    "category": "scheduler",
+    "description": "Updates a scheduling group's capacity estimate after CPU hotplug or frequency changes",
+    "symbol": "update_group_capacity"
+  },
+  {
+    "category": "memory",
+    "description": "Updates a maple tree iterator position; used during VMA traversal in the mm subsystem",
+    "symbol": "update_iter"
+  },
+  {
+    "category": "memory",
+    "description": "Updates a maple tree iterator after a modification (insert/remove) to the tree",
+    "symbol": "update_iter_mod"
+  },
+  {
+    "category": "scheduler",
+    "description": "Collects per-scheduling-domain load statistics for the load balancer",
+    "symbol": "update_sd_lb_stats"
+  },
+  {
+    "category": "scheduler",
+    "description": "Collects per-scheduling-group load statistics within a domain during balance",
+    "symbol": "update_sg_lb_stats"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "vfree"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "vfree_atomic"
+  },
+  {
+    "category": "filesystem",
+    "description": "VFS implementation of fstatat; resolves the path and calls the inode's getattr op",
+    "symbol": "vfs_fstatat"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "vfs_open"
+  },
+  {
+    "category": "filesystem",
+    "description": "VFS read dispatch; checks file permissions and calls f_op->read or do_iter_read",
+    "symbol": "vfs_read"
+  },
+  {
+    "category": "filesystem",
+    "description": "VFS implementation of statx; calls the inode's getattr op and fills the statx struct",
+    "symbol": "vfs_statx"
+  },
+  {
+    "category": "filesystem",
+    "description": "VFS write dispatch; checks permissions and calls f_op->write or do_iter_write",
+    "symbol": "vfs_write"
+  },
+  {
+    "category": "filesystem",
+    "description": "VFS implementation of writev; calls do_iter_write with a userspace iov_iter",
+    "symbol": "vfs_writev"
+  },
+  {
+    "category": "memory",
+    "description": "RCU callback that frees a VMA struct after the grace period; ensures no readers remain",
+    "symbol": "vm_area_free_rcu_cb"
+  },
+  {
+    "category": "memory",
+    "description": "Acquires the mmap write lock and calls do_mmap; top-level mmap entry with locking",
+    "symbol": "vm_mmap_pgoff"
+  },
+  {
+    "category": "memory",
+    "description": "Updates per-mm virtual memory statistics when a VMA is added or removed",
+    "symbol": "vm_stat_account"
+  },
+  {
+    "category": "memory",
+    "description": "Allocates a folio for a VMA fault without memory profiling overhead",
+    "symbol": "vma_alloc_folio_noprof"
+  },
+  {
+    "category": "memory",
+    "description": "Attempts to merge a new VMA with its neighbors to reduce VMA fragmentation",
+    "symbol": "vma_merge_new_range"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "vmemdup_user"
+  },
+  {
+    "category": "memory",
+    "description": "Deferred work to flush per-CPU VM stats into zone/node global counters",
+    "symbol": "vmstat_update"
+  },
+  {
+    "category": "misc",
+    "description": "Kernel printf-family formatter; renders a format string into a fixed-size buffer",
+    "symbol": "vsnprintf"
+  },
+  {
+    "category": "scheduler",
+    "description": "Wakes all tasks in a wake_q_head list; used for batched wakeups after lock releases",
+    "symbol": "wake_up_q"
+  },
+  {
+    "category": "",
+    "description": "",
+    "symbol": "walk_component"
+  },
+  {
+    "category": "filesystem",
+    "description": "Drives writeback work items for a bdi_writeback; dispatches to wb_writeback",
+    "symbol": "wb_do_writeback"
+  },
+  {
+    "category": "filesystem",
+    "description": "Workqueue function for bdi writeback; called periodically to flush dirty inodes",
+    "symbol": "wb_workfn"
+  },
+  {
+    "category": "filesystem",
+    "description": "Writes back dirty pages for a writeback device up to a nr_pages or time limit",
+    "symbol": "wb_writeback"
+  },
+  {
+    "category": "process",
+    "description": "Main loop of a kernel workqueue worker thread; picks and executes work items",
+    "symbol": "worker_thread"
+  },
+  {
+    "category": "filesystem",
+    "description": "Writes back dirty inodes for a superblock up to the writeback_control limits",
+    "symbol": "writeback_sb_inodes"
+  },
+  {
+    "category": "locking",
+    "description": "Acquires a wound/wait mutex with deadlock detection; aborts if a higher-priority waiter exists",
+    "symbol": "ww_mutex_lock_interruptible"
+  },
+  {
+    "category": "syscall",
+    "description": "Jump table dispatcher for x86-64 syscalls; called by do_syscall_64 after bounds check",
+    "symbol": "x64_sys_call"
+  },
+  {
+    "category": "process",
+    "description": "Early x86-64 kernel entry; sets up page tables and calls start_kernel",
+    "symbol": "x86_64_start_kernel"
+  },
+  {
+    "category": "process",
+    "description": "Reserves memory regions (BIOS, ACPI, crashkernel) before the memory allocator starts",
+    "symbol": "x86_64_start_reservations"
+  },
+  {
+    "category": "memory",
+    "description": "Unmaps all pages in a single address range from one VMA; used by madvise DONTNEED",
+    "symbol": "zap_page_range_single"
+  },
+  {
+    "category": "memory",
+    "description": "Tears down all PTEs within a PMD range; handles huge pages and TLB shootdowns",
+    "symbol": "zap_pmd_range"
+  },
+  {
+    "category": "memory",
+    "description": "Tears down PTEs in a range; handles dirty page accounting and TLB shootdowns",
+    "symbol": "zap_pte_range"
+  },
+  {
+    "category": "memory",
+    "description": "Tears down all PMDs within a PUD range during VMA unmapping",
+    "symbol": "zap_pud_range"
+  }
+]

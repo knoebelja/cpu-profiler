@@ -31,7 +31,13 @@ FetchContent_Declare(
     GIT_TAG v5.0.0
 )
 
-FetchContent_MakeAvailable(ftxui)
+FetchContent_Declare(
+    nlohmann_json
+    GIT_REPOSITORY https://github.com/nlohmann/json
+    GIT_TAG v3.11.3
+)
+
+FetchContent_MakeAvailable(ftxui nlohmann_json)
 
 add_executable(profiler
     src/main.cpp
@@ -39,6 +45,7 @@ add_executable(profiler
     src/symbols.cpp
     src/output.cpp
     src/aggregators/thread_activity.cpp
+    src/aggregators/kernel_dictionary.cpp
 )
 
 add_dependencies(profiler bpf_skel)
@@ -50,6 +57,8 @@ target_include_directories(profiler PRIVATE
     ${CMAKE_BINARY_DIR}
 )
 
+target_compile_definitions(profiler PRIVATE SOURCE_DIR="${CMAKE_SOURCE_DIR}")
+
 target_link_libraries(profiler PRIVATE
     bpf
     elf
@@ -57,6 +66,30 @@ target_link_libraries(profiler PRIVATE
     ftxui::screen
     ftxui::dom
     ftxui::component
+    nlohmann_json::nlohmann_json
+)
+
+add_executable(collect_symbols
+    tools/collect_symbols.cpp
+    src/collector.cpp
+    src/symbols.cpp
+)
+
+add_dependencies(collect_symbols bpf_skel)
+
+target_include_directories(collect_symbols PRIVATE
+    src
+    bpf
+    ${CMAKE_BINARY_DIR}
+)
+
+target_compile_definitions(collect_symbols PRIVATE SOURCE_DIR="${CMAKE_SOURCE_DIR}")
+
+target_link_libraries(collect_symbols PRIVATE
+    bpf
+    elf
+    z
+    nlohmann_json::nlohmann_json
 )
 
 find_program(CLANG_FORMAT clang-format)

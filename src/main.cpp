@@ -1,4 +1,5 @@
 #include <chrono>
+#include <cstring>
 #include <memory>
 #include <mutex>
 #include <signal.h>
@@ -6,9 +7,12 @@
 #include <vector>
 
 #include "aggregators/aggregator.h"
+#include "aggregators/kernel_dictionary.h"
 #include "aggregators/thread_activity.h"
 #include "buffer.h"
 #include "collector.h"
+#include "resolved_event.h"
+#include "symbols.h"
 
 #include "ftxui/component/component.hpp"
 #include "ftxui/component/screen_interactive.hpp"
@@ -24,10 +28,14 @@ static void handle_signal(int) {
 }
 
 int main() {
+  SymbolResolver resolver;
+  resolver.load_kernel_symbols();
+
   Buffer buffer;
 
   std::vector<std::unique_ptr<Aggregator>> aggregators;
   aggregators.push_back(std::make_unique<ThreadActivityAggregator>());
+  aggregators.push_back(std::make_unique<KernelDictionary>());
 
   int active = 0;
 
@@ -48,7 +56,23 @@ int main() {
     while (g_collector) {
       std::this_thread::sleep_for(std::chrono::milliseconds(3400));
 
-      auto snapshot = buffer.swap_out();
+      auto raw = buffer.swap_out();
+      std::vector<resolved_event> snapshot;
+      snapshot.reserve(raw.size());
+      int map_fd = collector.stack_traces_fd();
+      for (const auto &event : raw) {
+        resolved_event re;
+        re.pid = event.pid;
+        re.cpu = event.cpu;
+        re.kernel_stack_id = event.kernel_stack_id;
+        re.user_stack_id = event.user_stack_id;
+        memcpy(re.comm, event.comm, sizeof(event.comm));
+        if (map_fd >= 0 && event.kernel_stack_id >= 0)
+          re.kernel_syms =
+              resolver.resolve_kernel_stack(map_fd, event.kernel_stack_id);
+        snapshot.push_back(std::move(re));
+      }
+
       auto element = aggregators[active]->render(snapshot);
 
       {
