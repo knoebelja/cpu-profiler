@@ -5,7 +5,7 @@
 #include <linux/bpf.h>
 #include <bpf/bpf_helpers.h>  // BPF helper function declarations (bpf_get_current_pid_tgid, etc.)
 #include <bpf/bpf_tracing.h>  // Macros for attaching to tracing hooks
-#include "profiler.h"
+#include "perf.h"
 
 // BPF map: perf event ring buffer, one slot per CPU.
 // The kernel writes stack_event structs here; userspace reads them out.

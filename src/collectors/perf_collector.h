@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../bpf/profiler.h"
+#include "perf.h"
 #include <functional>
 
 // Callback type invoked for each CPU sample received from the kernel.

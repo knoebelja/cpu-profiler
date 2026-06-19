@@ -1,27 +1,27 @@
 cmake_minimum_required(VERSION 3.14)
-project(cpu-profiler)
+project(learning-profilers)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(BPF_SOURCE ${CMAKE_SOURCE_DIR}/bpf/profiler.bpf.c)
-set(BPF_OBJECT ${CMAKE_BINARY_DIR}/profiler.bpf.o)
-set(BPF_SKEL   ${CMAKE_BINARY_DIR}/profiler.skel.h)
+set(PERF_BPF_SOURCE ${CMAKE_SOURCE_DIR}/bpf/perf.bpf.c)
+set(PERF_BPF_OBJECT ${CMAKE_BINARY_DIR}/perf.bpf.o)
+set(PERF_BPF_SKEL   ${CMAKE_BINARY_DIR}/perf.skel.h)
 
 add_custom_command(
-    OUTPUT ${BPF_OBJECT}
+    OUTPUT ${PERF_BPF_OBJECT}
     COMMAND clang -g -O2 -target bpf -D__TARGET_ARCH_X86
             -I/usr/include/x86_64-linux-gnu
-            -c ${BPF_SOURCE} -o ${BPF_OBJECT}
-    DEPENDS ${BPF_SOURCE} ${CMAKE_SOURCE_DIR}/bpf/profiler.h
+            -c ${PERF_BPF_SOURCE} -o ${PERF_BPF_OBJECT}
+    DEPENDS ${PERF_BPF_SOURCE} ${CMAKE_SOURCE_DIR}/bpf/perf.h
 )
 
 add_custom_command(
-    OUTPUT ${BPF_SKEL}
-    COMMAND bpftool gen skeleton ${BPF_OBJECT} > ${BPF_SKEL}
-    DEPENDS ${BPF_OBJECT}
+    OUTPUT ${PERF_BPF_SKEL}
+    COMMAND bpftool gen skeleton ${PERF_BPF_OBJECT} > ${PERF_BPF_SKEL}
+    DEPENDS ${PERF_BPF_OBJECT}
 )
 
-add_custom_target(bpf_skel DEPENDS ${BPF_SKEL})
+add_custom_target(perf_bpf_skel DEPENDS ${PERF_BPF_SKEL})
 
 include(FetchContent)
 
@@ -41,18 +41,20 @@ FetchContent_MakeAvailable(ftxui nlohmann_json)
 
 add_executable(profiler
     src/main.cpp
-    src/collector.cpp
+    src/collectors/perf_collector.cpp
     src/symbols.cpp
-    src/output.cpp
     src/aggregators/thread_activity.cpp
     src/aggregators/kernel_dictionary.cpp
+    src/aggregators/call_stack.cpp
 )
 
-add_dependencies(profiler bpf_skel)
+add_dependencies(profiler perf_bpf_skel)
 
 target_include_directories(profiler PRIVATE
     src
+    src/collectors
     src/aggregators
+    src/profilers
     bpf
     ${CMAKE_BINARY_DIR}
 )
@@ -71,14 +73,15 @@ target_link_libraries(profiler PRIVATE
 
 add_executable(collect_symbols
     tools/collect_symbols.cpp
-    src/collector.cpp
+    src/collectors/perf_collector.cpp
     src/symbols.cpp
 )
 
-add_dependencies(collect_symbols bpf_skel)
+add_dependencies(collect_symbols perf_bpf_skel)
 
 target_include_directories(collect_symbols PRIVATE
     src
+    src/collectors
     bpf
     ${CMAKE_BINARY_DIR}
 )

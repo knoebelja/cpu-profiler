@@ -9,7 +9,7 @@
 #include <nlohmann/json.hpp>
 
 #include "buffer.h"
-#include "collector.h"
+#include "perf_collector.h"
 #include "symbols.h"
 
 using json = nlohmann::json;

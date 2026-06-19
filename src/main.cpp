@@ -7,10 +7,11 @@
 #include <vector>
 
 #include "aggregators/aggregator.h"
+#include "aggregators/call_stack.h"
 #include "aggregators/kernel_dictionary.h"
 #include "aggregators/thread_activity.h"
 #include "buffer.h"
-#include "collector.h"
+#include "perf_collector.h"
 #include "resolved_event.h"
 #include "symbols.h"
 
@@ -36,6 +37,7 @@ int main() {
   std::vector<std::unique_ptr<Aggregator>> aggregators;
   aggregators.push_back(std::make_unique<ThreadActivityAggregator>());
   aggregators.push_back(std::make_unique<KernelDictionary>());
+  aggregators.push_back(std::make_unique<CallStack>());
 
   int active = 0;
 

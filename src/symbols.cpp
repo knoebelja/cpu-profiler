@@ -1,5 +1,5 @@
 #include "symbols.h"
-#include "../bpf/profiler.h"
+#include "perf.h"
 #include <bpf/bpf.h>
 #include <cstdint>
 #include <cstdio>
