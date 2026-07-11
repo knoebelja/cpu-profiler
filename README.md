@@ -26,10 +26,20 @@ A suite of eBPF-based OS observability tools — starting with CPU, with memory 
 - [x] Kernel dictionary view: live top-N symbols ranked by CPU%, with descriptions and category color coding
 - [x] Symbol descriptions stored in `data/descriptions.json` (483 symbols with categories)
 - [x] `collect_symbols` tool to discover new kernel symbols on a running system
+- [x] Call stack view: top kernel call chains as proportional colored bars, ranked by frequency
+
+## Live Snapshot
+
+While the profiler is running, [`data/snapshot.json`](data/snapshot.json) is updated after every heartbeat (every ~3.4s) with the last 60 seconds of resolved events. Inspect it with:
+
+```bash
+jq '.[0]' data/snapshot.json          # first event
+jq '[.[].comm] | unique' data/snapshot.json   # all process names seen
+jq '[.[].kernel_syms[]] | group_by(.) | map({sym: .[0], count: length}) | sort_by(-.count) | .[0:10]' data/snapshot.json  # top kernel symbols
+```
 
 ## Next Steps
 
-- [ ] Call stack view: nested call tree grouped by pid
 - [ ] ELF symbol table parsing for real userspace function names
 
 ## Dependencies
@@ -58,6 +68,7 @@ The TUI refreshes every 3.4 seconds. Terminal size determines how much data is s
 
 - **Thread activity**: per-thread breakdown of time spent in kernel, userspace, and idle
 - **Kernel dictionary**: top-20 kernel symbols ranked by CPU utilization, with descriptions and category color coding
+- **Call stacks**: top kernel call chains rendered as proportional colored bars, ranked by sample frequency
 
 ## Project Structure
 
@@ -75,6 +86,7 @@ src/                          # Userspace C++
     aggregator.h              # Abstract base class for all views
     thread_activity.cpp/h     # Per-CPU kernel/user/idle bar chart
     kernel_dictionary.cpp/h   # Top kernel symbols ranked by CPU%, with descriptions
+    call_stack.cpp/h          # Top kernel call chains as proportional colored bars
 data/
   descriptions.json           # 483 kernel symbols with descriptions and categories
 tools/

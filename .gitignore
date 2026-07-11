@@ -1,3 +1,4 @@
 .output
 profiler
 build/
+data/snapshot.json

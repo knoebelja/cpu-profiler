@@ -1,8 +1,13 @@
 #include "symbols.h"
 #include "perf.h"
+#include <algorithm>
 #include <bpf/bpf.h>
 #include <cstdint>
 #include <cstdio>
+#include <fcntl.h>
+#include <gelf.h>
+#include <libelf.h>
+#include <unistd.h>
 
 bool SymbolResolver::load_kernel_symbols() {
   FILE *f = fopen("/proc/kallsyms", "r");
@@ -90,6 +95,60 @@ bool SymbolResolver::load_process_maps(int pid) {
   return true;
 }
 
+void SymbolResolver::load_elf_symbols(const std::string &path) const {
+  // elf_begin requires a version call before first use.
+  elf_version(EV_CURRENT);
+
+  int fd = open(path.c_str(), O_RDONLY);
+  if (fd < 0) {
+    elf_syms_[path] = {};
+    return;
+  }
+
+  Elf *e = elf_begin(fd, ELF_C_READ, nullptr);
+  if (!e) {
+    close(fd);
+    elf_syms_[path] = {};
+    return;
+  }
+
+  std::vector<std::pair<uint64_t, std::string>> syms;
+
+  Elf_Scn *scn = nullptr;
+  while ((scn = elf_nextscn(e, scn)) != nullptr) {
+    GElf_Shdr shdr;
+    gelf_getshdr(scn, &shdr);
+
+    // We want both .symtab (full, may be stripped) and .dynsym (always present)
+    if (shdr.sh_type != SHT_SYMTAB && shdr.sh_type != SHT_DYNSYM)
+      continue;
+
+    Elf_Data *data = elf_getdata(scn, nullptr);
+    if (!data)
+      continue;
+
+    int count = shdr.sh_size / shdr.sh_entsize;
+    for (int i = 0; i < count; i++) {
+      GElf_Sym sym;
+      gelf_getsym(data, i, &sym);
+
+      // Only function symbols with a nonzero address are useful for stack resolution
+      if (GELF_ST_TYPE(sym.st_info) != STT_FUNC || sym.st_value == 0)
+        continue;
+
+      const char *name = elf_strptr(e, shdr.sh_link, sym.st_name);
+      if (name && *name)
+        syms.push_back({sym.st_value, name});
+    }
+  }
+
+  elf_end(e);
+  close(fd);
+
+  std::sort(syms.begin(), syms.end());
+  elf_syms_[path] = std::move(syms);
+}
+
 std::string SymbolResolver::resolve_user(int pid, uint64_t address) const {
   auto it = process_maps_.find(pid);
   if (it == process_maps_.end())
@@ -98,10 +157,32 @@ std::string SymbolResolver::resolve_user(int pid, uint64_t address) const {
   // Find the mapping that contains this address
   for (const auto &entry : it->second) {
     if (address >= entry.start && address < entry.end) {
-      // Compute offset within the file
-      uint64_t offset = address - entry.start + entry.file_offset;
+      // ASLR means the library is loaded at a random base each run.
+      // The ELF file itself uses its own virtual address space starting at 0.
+      // To convert: subtract the mapping's load address, then add the file
+      // offset for the segment. This gives the ELF-relative virtual address
+      // that matches what's in the symbol table.
+      uint64_t elf_vaddr = address - entry.start + entry.file_offset;
+
+      // Lazily load this file's symbol table on first access.
+      if (elf_syms_.count(entry.path) == 0)
+        load_elf_symbols(entry.path);
+
+      const auto &syms = elf_syms_[entry.path];
+      if (!syms.empty()) {
+        // Binary search: find the first symbol with address > elf_vaddr,
+        // then step back one — that's the function containing this address.
+        auto sit = std::upper_bound(syms.begin(), syms.end(),
+                                    std::make_pair(elf_vaddr, std::string{}));
+        if (sit != syms.begin()) {
+          --sit;
+          return sit->second;
+        }
+      }
+
+      // No symbol found — fall back to file+offset for debugging visibility
       char buf[256];
-      snprintf(buf, sizeof(buf), "%s+0x%lx", entry.path.c_str(), offset);
+      snprintf(buf, sizeof(buf), "%s+0x%lx", entry.path.c_str(), elf_vaddr);
       return buf;
     }
   }

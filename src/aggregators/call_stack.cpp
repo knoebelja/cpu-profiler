@@ -63,41 +63,38 @@ static std::string strip_suffix(const std::string& raw) {
     return (dot != std::string::npos) ? raw.substr(0, dot) : raw;
 }
 
-ftxui::Element CallStack::render(const std::vector<resolved_event>& events) const {
-    auto descriptions = load_descs();
-
-    // Build unique chain counts (root-first: reverse kernel_syms)
-    std::map<std::vector<std::string>, int> chain_counts;
-    for (const auto& event : events) {
-        if (event.kernel_syms.empty()) continue;
-        std::vector<std::string> chain;
-        for (int i = (int)event.kernel_syms.size() - 1; i >= 0; i--) {
-            std::string sym = strip_suffix(event.kernel_syms[i]);
-            if (!sym.empty()) chain.push_back(sym);
-        }
-        if (!chain.empty()) chain_counts[chain]++;
+// Returns the call chain for one event, root-first.
+// Userspace frames come first (reversed so root is first), then kernel frames
+// (also reversed). Swap or filter these to get different view flavors.
+static std::vector<std::string> build_chain(const resolved_event& event) {
+    std::vector<std::string> chain;
+    for (int i = (int)event.user_syms.size() - 1; i >= 0; i--) {
+        std::string sym = strip_suffix(event.user_syms[i]);
+        if (!sym.empty()) chain.push_back(sym);
     }
+    for (int i = (int)event.kernel_syms.size() - 1; i >= 0; i--) {
+        std::string sym = strip_suffix(event.kernel_syms[i]);
+        if (!sym.empty()) chain.push_back(sym);
+    }
+    return chain;
+}
 
-    if (chain_counts.empty())
-        return text("No data yet") | center;
+using DescMap = std::unordered_map<std::string, SymInfo>;
+using ChainCounts = std::vector<std::pair<std::vector<std::string>, int>>;
 
-    std::vector<std::pair<std::vector<std::string>, int>> chains(chain_counts.begin(), chain_counts.end());
-    std::sort(chains.begin(), chains.end(), [](const auto& a, const auto& b) {
-        return a.second > b.second;
-    });
-
+// Renders a sorted list of (chain, count) pairs as proportional colored bars.
+// Reusable by any aggregator that produces chains in the same format.
+static ftxui::Element render_chains(const ChainCounts& chains, const DescMap& descriptions) {
     int max_count = chains.front().second;
     const int BAR_WIDTH = 60;
     int display = std::min((int)chains.size(), 20);
 
-    // Render each chain as a proportional colored bar + label
     Elements chain_rows;
     for (int i = 0; i < display; i++) {
         const auto& [chain, count] = chains[i];
         int bar_w = std::max(1, (count * BAR_WIDTH) / max_count);
         int seg_w = std::max(1, bar_w / (int)chain.size());
 
-        // Build bar: one colored segment per function
         Elements bar;
         int used = 0;
         for (int s = 0; s < (int)chain.size() && used < bar_w; s++) {
@@ -119,16 +116,12 @@ ftxui::Element CallStack::render(const std::vector<resolved_event>& events) cons
             bar.push_back(cell);
             used += w;
         }
-        // Pad remaining bar space
         if (used < BAR_WIDTH)
             bar.push_back(text(std::string(BAR_WIDTH - used, ' ')));
 
-        // Leaf symbol description as the chain's "definition"
         const std::string& leaf = chain.back();
-        std::string desc;
         auto it = descriptions.find(leaf);
-        if (it != descriptions.end() && !it->second.description.empty())
-            desc = it->second.description;
+        std::string desc = (it != descriptions.end()) ? it->second.description : "";
 
         char count_buf[8];
         snprintf(count_buf, sizeof(count_buf), "%4d", count);
@@ -144,4 +137,24 @@ ftxui::Element CallStack::render(const std::vector<resolved_event>& events) cons
     }
 
     return vbox(chain_rows) | border;
+}
+
+ftxui::Element CallStack::render(const std::vector<resolved_event>& events) const {
+    auto descriptions = load_descs();
+
+    std::map<std::vector<std::string>, int> chain_counts;
+    for (const auto& event : events) {
+        auto chain = build_chain(event);
+        if (!chain.empty()) chain_counts[chain]++;
+    }
+
+    if (chain_counts.empty())
+        return text("No data yet") | center;
+
+    ChainCounts chains(chain_counts.begin(), chain_counts.end());
+    std::sort(chains.begin(), chains.end(), [](const auto& a, const auto& b) {
+        return a.second > b.second;
+    });
+
+    return render_chains(chains, descriptions);
 }

@@ -1,10 +1,14 @@
 #include <chrono>
 #include <cstring>
+#include <deque>
+#include <fstream>
 #include <memory>
 #include <mutex>
 #include <signal.h>
 #include <thread>
 #include <vector>
+
+#include <nlohmann/json.hpp>
 
 #include "aggregators/aggregator.h"
 #include "aggregators/call_stack.h"
@@ -22,6 +26,22 @@
 using namespace ftxui;
 
 static Collector *g_collector = nullptr;
+
+static void dump_snapshot(const std::deque<resolved_event> &window) {
+  nlohmann::json j = nlohmann::json::array();
+  for (const auto &e : window) {
+    j.push_back({
+        {"pid", e.pid},
+        {"comm", std::string(e.comm)},
+        {"timestamp_ms", e.timestamp_ms},
+        {"kernel_syms", e.kernel_syms},
+        {"user_syms", e.user_syms},
+    });
+  }
+  std::ofstream f(std::string(SOURCE_DIR) + "/data/snapshot.json");
+  if (f)
+    f << j.dump(2);
+}
 
 static void handle_signal(int) {
   if (g_collector)
@@ -54,13 +74,18 @@ int main() {
   Element current_view = text("Loading...");
   std::mutex view_mutex;
 
+  // Sliding window of the last 60 seconds of resolved events.
+  // Only accessed from the heartbeat thread, so no extra locking needed.
+  std::deque<resolved_event> window;
+
   std::thread heartbeat([&]() {
     while (g_collector) {
       std::this_thread::sleep_for(std::chrono::milliseconds(3400));
 
+      uint64_t now_ms = (uint64_t)std::chrono::duration_cast<std::chrono::milliseconds>(
+          std::chrono::system_clock::now().time_since_epoch()).count();
+
       auto raw = buffer.swap_out();
-      std::vector<resolved_event> snapshot;
-      snapshot.reserve(raw.size());
       int map_fd = collector.stack_traces_fd();
       for (const auto &event : raw) {
         resolved_event re;
@@ -68,13 +93,22 @@ int main() {
         re.cpu = event.cpu;
         re.kernel_stack_id = event.kernel_stack_id;
         re.user_stack_id = event.user_stack_id;
+        re.timestamp_ms = now_ms;
         memcpy(re.comm, event.comm, sizeof(event.comm));
         if (map_fd >= 0 && event.kernel_stack_id >= 0)
           re.kernel_syms =
               resolver.resolve_kernel_stack(map_fd, event.kernel_stack_id);
-        snapshot.push_back(std::move(re));
+        if (map_fd >= 0 && event.user_stack_id >= 0)
+          re.user_syms =
+              resolver.resolve_user_stack(map_fd, event.user_stack_id, event.pid);
+        window.push_back(std::move(re));
       }
 
+      // Evict events older than 60 seconds
+      while (!window.empty() && now_ms - window.front().timestamp_ms > 60000)
+        window.pop_front();
+
+      std::vector<resolved_event> snapshot(window.begin(), window.end());
       auto element = aggregators[active]->render(snapshot);
 
       {
@@ -83,6 +117,7 @@ int main() {
       }
 
       screen.PostEvent(Event::Custom);
+      dump_snapshot(window);
     }
   });
 

@@ -35,8 +35,11 @@ public:
   // Should be called when a new pid is first seen in a sample.
   bool load_process_maps(int pid);
 
-  // Returns the symbol name for a userspace address in the given process,
-  // or a hex string if the mapping or symbol can't be found.
+  // Returns the symbol name for a userspace address in the given process.
+  // Converts the raw virtual address to an ELF-relative address via the
+  // process's memory map (raw_addr - map_start + map_file_offset), then
+  // looks up the nearest symbol in that ELF file's symbol table.
+  // Falls back to "file+0xoffset" if the ELF isn't loaded or has no symbols.
   std::string resolve_user(int pid, uint64_t address) const;
 
   // Looks up a stack ID in the BPF stack_traces map and resolves each
@@ -53,4 +56,17 @@ private:
 
   // Keyed by pid, each entry is a sorted list of mappings for that process
   std::unordered_map<int, std::vector<MapEntry>> process_maps_;
+
+  // Parses .symtab and .dynsym from the given ELF file and populates
+  // elf_syms_[path]. Called lazily the first time a path is seen.
+  void load_elf_symbols(const std::string &path) const;
+
+  // ELF symbol table cache, keyed by file path.
+  // Each entry is a sorted list of (elf_virtual_address, name) pairs.
+  // We parse .dynsym (always present in shared libs) and .symtab (present in
+  // unstripped binaries) once per file, then binary-search for lookups.
+  // Shared across all pids — the ELF-relative addresses are file-level, not
+  // process-level, so one cache entry covers every process using that lib.
+  // mutable because load_elf_symbols populates it lazily from const resolve_user
+  mutable std::unordered_map<std::string, std::vector<std::pair<uint64_t, std::string>>> elf_syms_;
 };
