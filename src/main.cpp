@@ -72,6 +72,7 @@ int main() {
   auto screen = ScreenInteractive::Fullscreen();
 
   Element current_view = text("Loading...");
+  std::vector<resolved_event> last_snapshot;
   std::mutex view_mutex;
 
   // Sliding window of the last 60 seconds of resolved events.
@@ -113,6 +114,7 @@ int main() {
 
       {
         std::lock_guard<std::mutex> lock(view_mutex);
+        last_snapshot = snapshot;
         current_view = element;
       }
 
@@ -130,12 +132,29 @@ int main() {
       }),
       [&](Event event) {
         if (event == Event::ArrowLeft) {
-          active =
-              (active - 1 + (int)aggregators.size()) % (int)aggregators.size();
+          active = (active - 1 + (int)aggregators.size()) % (int)aggregators.size();
+          aggregators[active]->reset_scroll();
+          std::lock_guard<std::mutex> lock(view_mutex);
+          current_view = aggregators[active]->render(last_snapshot);
           return true;
         }
         if (event == Event::ArrowRight) {
           active = (active + 1) % (int)aggregators.size();
+          aggregators[active]->reset_scroll();
+          std::lock_guard<std::mutex> lock(view_mutex);
+          current_view = aggregators[active]->render(last_snapshot);
+          return true;
+        }
+        if (event == Event::ArrowUp) {
+          aggregators[active]->scroll(-1);
+          std::lock_guard<std::mutex> lock(view_mutex);
+          current_view = aggregators[active]->render(last_snapshot);
+          return true;
+        }
+        if (event == Event::ArrowDown) {
+          aggregators[active]->scroll(1);
+          std::lock_guard<std::mutex> lock(view_mutex);
+          current_view = aggregators[active]->render(last_snapshot);
           return true;
         }
         if (event == Event::Character('q')) {

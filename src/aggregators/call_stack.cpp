@@ -80,81 +80,151 @@ static std::vector<std::string> build_chain(const resolved_event& event) {
 }
 
 using DescMap = std::unordered_map<std::string, SymInfo>;
-using ChainCounts = std::vector<std::pair<std::vector<std::string>, int>>;
 
-// Renders a sorted list of (chain, count) pairs as proportional colored bars.
-// Reusable by any aggregator that produces chains in the same format.
-static ftxui::Element render_chains(const ChainCounts& chains, const DescMap& descriptions) {
-    int max_count = chains.front().second;
-    const int BAR_WIDTH = 60;
-    int display = std::min((int)chains.size(), 20);
+// Prefix tree node. count = total samples that passed through this node.
+struct TreeNode {
+    int count = 0;
+    std::map<std::string, TreeNode> children;
+};
 
-    Elements chain_rows;
-    for (int i = 0; i < display; i++) {
-        const auto& [chain, count] = chains[i];
-        int bar_w = std::max(1, (count * BAR_WIDTH) / max_count);
-        int seg_w = std::max(1, bar_w / (int)chain.size());
+static void insert_chain(TreeNode& root, const std::vector<std::string>& chain) {
+    TreeNode* node = &root;
+    node->count++;
+    for (const auto& sym : chain) {
+        node = &node->children[sym];
+        node->count++;
+    }
+}
 
-        Elements bar;
-        int used = 0;
-        for (int s = 0; s < (int)chain.size() && used < bar_w; s++) {
-            int w = (s == (int)chain.size() - 1) ? (bar_w - used) : seg_w;
-            w = std::min(w, bar_w - used);
-            if (w <= 0) break;
+// Renders one node and recurses into children sorted by count descending.
+// prefix  : the continuing line characters inherited from parent levels
+// is_last : determines ├── vs └── and whether to continue │ below
+// min_count: branches below this are pruned
+// budget  : max lines left to render
+static void render_node(
+    Elements& rows,
+    const std::string& sym,
+    const TreeNode& node,
+    const DescMap& descriptions,
+    const std::string& prefix,
+    bool is_last,
+    int min_count,
+    int depth,
+    int& budget
+) {
+    if (budget <= 0 || depth > 24) return;
 
-            std::string label = chain[s];
-            if ((int)label.size() >= w)
-                label = w > 1 ? label.substr(0, w - 1) + "\xe2\x80\xa6" : label.substr(0, 1);
-            while ((int)label.size() < w) label += ' ';
+    std::string branch = prefix + (is_last ? "\xe2\x94\x94\xe2\x94\x80\xe2\x94\x80 " : "\xe2\x94\x9c\xe2\x94\x80\xe2\x94\x80 ");
+    std::string cont   = prefix + (is_last ? "    " : "\xe2\x94\x82   ");
 
-            Color bg = Color::Default;
-            auto it = descriptions.find(chain[s]);
-            if (it != descriptions.end()) bg = cat_color(it->second.category);
+    auto it = descriptions.find(sym);
+    Color c = (it != descriptions.end()) ? cat_color(it->second.category) : Color::Default;
 
-            auto cell = text(label) | color(Color::Black);
-            if (bg != Color::Default) cell = cell | bgcolor(bg);
-            bar.push_back(cell);
-            used += w;
-        }
-        if (used < BAR_WIDTH)
-            bar.push_back(text(std::string(BAR_WIDTH - used, ' ')));
+    char buf[32];
+    snprintf(buf, sizeof(buf), " (%d)", node.count);
 
-        const std::string& leaf = chain.back();
-        auto it = descriptions.find(leaf);
-        std::string desc = (it != descriptions.end()) ? it->second.description : "";
+    auto sym_elem = text(sym);
+    if (it != descriptions.end()) sym_elem = sym_elem | bold | color(c);
+    else sym_elem = sym_elem | dim;
 
-        char count_buf[8];
-        snprintf(count_buf, sizeof(count_buf), "%4d", count);
+    rows.push_back(hbox({text(branch) | dim, sym_elem, text(buf) | dim}));
+    budget--;
 
-        chain_rows.push_back(hbox({
-            hbox(bar),
-            text(" ") | dim,
-            text(count_buf) | dim,
-            text("  "),
-            text(leaf) | bold | color(it != descriptions.end() ? cat_color(it->second.category) : Color::Default),
-            text(desc.empty() ? "" : "  " + desc) | dim,
-        }));
+    // Collect and sort children above the pruning threshold
+    std::vector<std::pair<std::string, const TreeNode*>> kids;
+    int pruned = 0;
+    for (const auto& [s, n] : node.children) {
+        if (n.count >= min_count) kids.push_back({s, &n});
+        else pruned++;
+    }
+    std::sort(kids.begin(), kids.end(), [](const auto& a, const auto& b) {
+        return a.second->count > b.second->count;
+    });
+
+    for (int i = 0; i < (int)kids.size() && budget > 0; i++) {
+        bool last = (i == (int)kids.size() - 1) && pruned == 0;
+        render_node(rows, kids[i].first, *kids[i].second, descriptions,
+                    cont, last, min_count, depth + 1, budget);
     }
 
-    return vbox(chain_rows) | border;
+    if (pruned > 0 && budget > 0) {
+        rows.push_back(text(cont + "… " + std::to_string(pruned) + " more") | dim);
+        budget--;
+    }
 }
 
 ftxui::Element CallStack::render(const std::vector<resolved_event>& events) const {
     auto descriptions = load_descs();
 
-    std::map<std::vector<std::string>, int> chain_counts;
+    TreeNode root;
     for (const auto& event : events) {
         auto chain = build_chain(event);
-        if (!chain.empty()) chain_counts[chain]++;
+        if (!chain.empty()) insert_chain(root, chain);
     }
 
-    if (chain_counts.empty())
+    if (root.children.empty())
         return text("No data yet") | center;
 
-    ChainCounts chains(chain_counts.begin(), chain_counts.end());
-    std::sort(chains.begin(), chains.end(), [](const auto& a, const auto& b) {
-        return a.second > b.second;
+    // Prune branches below 0.25% of total samples, minimum 2
+    int min_count = std::max(2, root.count / 400);
+
+    // Sort top-level entries by count
+    std::vector<std::pair<std::string, const TreeNode*>> tops;
+    for (const auto& [sym, node] : root.children)
+        if (node.count >= min_count) tops.push_back({sym, &node});
+    std::sort(tops.begin(), tops.end(), [](const auto& a, const auto& b) {
+        return a.second->count > b.second->count;
     });
 
-    return render_chains(chains, descriptions);
+    Elements all_rows;
+    int budget = 800;
+
+    for (int i = 0; i < (int)tops.size() && budget > 0; i++) {
+        const auto& [sym, node] = tops[i];
+        auto it = descriptions.find(sym);
+        Color c = (it != descriptions.end()) ? cat_color(it->second.category) : Color::Default;
+
+        char buf[32];
+        snprintf(buf, sizeof(buf), " (%d)", node->count);
+
+        auto sym_elem = text(sym);
+        if (it != descriptions.end()) sym_elem = sym_elem | bold | color(c);
+        else sym_elem = sym_elem | dim;
+
+        all_rows.push_back(hbox({sym_elem, text(buf) | dim}));
+        budget--;
+
+        std::vector<std::pair<std::string, const TreeNode*>> kids;
+        int pruned = 0;
+        for (const auto& [s, n] : node->children) {
+            if (n.count >= min_count) kids.push_back({s, &n});
+            else pruned++;
+        }
+        std::sort(kids.begin(), kids.end(), [](const auto& a, const auto& b) {
+            return a.second->count > b.second->count;
+        });
+
+        for (int j = 0; j < (int)kids.size() && budget > 0; j++) {
+            bool last = (j == (int)kids.size() - 1) && pruned == 0;
+            render_node(all_rows, kids[j].first, *kids[j].second, descriptions,
+                        "", last, min_count, 1, budget);
+        }
+        if (pruned > 0 && budget > 0) {
+            all_rows.push_back(text("… " + std::to_string(pruned) + " more") | dim);
+            budget--;
+        }
+
+        if (i < (int)tops.size() - 1 && budget > 0) {
+            all_rows.push_back(text(""));
+            budget--;
+        }
+    }
+
+    // Clamp and apply scroll offset
+    int total = (int)all_rows.size();
+    int offset = std::max(0, std::min(scroll_offset_.load(), total - 1));
+    scroll_offset_ = offset;
+
+    Elements visible(all_rows.begin() + offset, all_rows.end());
+    return vbox(visible) | border;
 }

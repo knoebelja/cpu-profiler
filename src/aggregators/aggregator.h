@@ -14,4 +14,8 @@ public:
 
   virtual std::string title() const = 0;
   virtual std::string description() const = 0;
+
+  // Override to support up/down scroll navigation. Default is no-op.
+  virtual void scroll(int delta) {}
+  virtual void reset_scroll() {}
 };
