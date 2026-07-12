@@ -4,6 +4,7 @@
 #include <bpf/bpf.h>
 #include <cstdint>
 #include <cstdio>
+#include <cxxabi.h>
 #include <fcntl.h>
 #include <gelf.h>
 #include <libelf.h>
@@ -95,6 +96,17 @@ bool SymbolResolver::load_process_maps(int pid) {
   return true;
 }
 
+static std::string demangle(const std::string &name) {
+  int status = 0;
+  char *demangled = abi::__cxa_demangle(name.c_str(), nullptr, nullptr, &status);
+  if (status == 0 && demangled) {
+    std::string result(demangled);
+    free(demangled);
+    return result;
+  }
+  return name;
+}
+
 void SymbolResolver::load_elf_symbols(const std::string &path) const {
   // elf_begin requires a version call before first use.
   elf_version(EV_CURRENT);
@@ -176,7 +188,7 @@ std::string SymbolResolver::resolve_user(int pid, uint64_t address) const {
                                     std::make_pair(elf_vaddr, std::string{}));
         if (sit != syms.begin()) {
           --sit;
-          return sit->second;
+          return demangle(sit->second);
         }
       }
 

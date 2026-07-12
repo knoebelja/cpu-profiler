@@ -95,6 +95,10 @@ target_link_libraries(collect_symbols PRIVATE
     nlohmann_json::nlohmann_json
 )
 
+add_executable(sim sim/main.cpp)
+target_compile_features(sim PRIVATE cxx_std_17)
+target_link_libraries(sim PRIVATE pthread)
+
 find_program(CLANG_FORMAT clang-format)
 if(CLANG_FORMAT)
     file(GLOB_RECURSE ALL_SOURCE_FILES src/*.cpp src/*.h)
