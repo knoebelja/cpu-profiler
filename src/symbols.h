@@ -1,5 +1,6 @@
 #pragma once
 
+#include "perf.h"
 #include <cstdint>
 #include <map>
 #include <string>
@@ -28,8 +29,9 @@ public:
 
   // Looks up a stack ID in the BPF stack_traces map and resolves each
   // instruction pointer address to a kernel symbol name.
-  std::vector<std::string> resolve_kernel_stack(int map_fd,
-                                                int32_t stack_id) const;
+  // depth must match the map's max_entries value size (in u64 slots).
+  std::vector<std::string> resolve_kernel_stack(int map_fd, int32_t stack_id,
+                                                int depth = MAX_STACK_DEPTH) const;
 
   // Reads /proc/PID/maps for the given process and stores its memory mappings.
   // Should be called when a new pid is first seen in a sample.
@@ -44,9 +46,11 @@ public:
 
   // Looks up a stack ID in the BPF stack_traces map and resolves each
   // address to a userspace symbol using the process memory maps.
+  // depth must match the map's max_entries value size (in u64 slots).
   // Loads /proc/PID/maps automatically if this pid hasn't been seen before.
   std::vector<std::string> resolve_user_stack(int map_fd, int32_t stack_id,
-                                              int pid);
+                                              int pid,
+                                              int depth = MAX_STACK_DEPTH);
 
 private:
   // Sorted map of address -> symbol name.

@@ -1,42 +1,46 @@
 #pragma once
 #include <linux/types.h>
 
-#define MAX_STACK_DEPTH 127
+#define LOCK_MAX_STACK_DEPTH 127
 
-
-// when a thread calls futex(FUTEX_WAIT)
-// we need to remember who was waiting on which lock (uaddr)
-// so we can match it when futex returns
-// tgid is the process, tid is the specific thread
-// multiple threads in the same process can be blocked
-// on different locks simultaneously
-struct contention_key {
-    __u32 tgid;
-    __u32 tid;
-    __u64 uaddr;
-};
-
-// stored for each in-flight wait
-// when it started and what the call stack
-// looked liked like at that moment
-// we capture on entry (not exit) because
-// the thread is actually in the code path
-// that tried to acquire the lock
-// at that moment
+// stored for each in-flight wait; keyed by tid in pending_waits
+// uaddr/tgid/holder_tid are stashed here because the exit probe doesn't have them
 struct contention_start {
     __u64 timestamp_ns;
+    __u64 uaddr;
+    __u32 tgid;
+    __u32 holder_tid;
     __s32 user_stack_id;
 };
 
-// sent to userspace when contention resolves
-// wait_ns is duration the thread is blocked
-// this is basically what we aggregate and display
-struct lock_event {
-    __u32 tgid;
+// stored when a thread calls futex(FUTEX_WAKE) — captures the holder's unlock
+// stack so we can correlate it with the waiter that subsequently wakes up
+struct wake_info {
+    __s32 stack_id;
     __u32 tid;
+};
+
+// key for pending_wakes map — (tgid, uaddr) to avoid collisions across processes
+// that happen to have the same virtual address for their mutex
+struct wake_key {
     __u64 uaddr;
-    __u64 wait_ns;
-    __s32 user_stack_id;
+    __u32 tgid;
+    __u32 _pad;
+};
+
+// key into lock_stats — one entry per unique (waiter call site, holder call site, lock)
+struct lock_stat_key {
+    __u64 uaddr;
+    __s32 waiter_stack_id;
+    __s32 holder_stack_id;
+};
+
+// accumulated stats per unique key tuple
+// lives in a BPF_MAP_TYPE_PERCPU_HASH; userspace sums across CPUs on read
+struct lock_stat_val {
+    __u64 total_wait_ns;
+    __u64 count;
+    __u32 tgid;
+    __u32 holder_tid;
     char comm[16];
 };
-

@@ -10,6 +10,5 @@ public:
   std::string description() const override {
     return "Top kernel symbols by CPU utilization with descriptions";
   }
-  ftxui::Element
-  render(const std::vector<resolved_event> &events) const override;
+  ftxui::Element render(const heartbeat_data &data) const override;
 };

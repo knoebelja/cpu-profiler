@@ -153,11 +153,11 @@ static void render_node(
     }
 }
 
-ftxui::Element CallStack::render(const std::vector<resolved_event>& events) const {
+ftxui::Element CallStack::render(const heartbeat_data &data) const {
     auto descriptions = load_descs();
 
     TreeNode root;
-    for (const auto& event : events) {
+    for (const auto& event : data.events) {
         auto chain = build_chain(event);
         if (!chain.empty()) insert_chain(root, chain);
     }

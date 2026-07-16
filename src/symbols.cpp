@@ -45,18 +45,16 @@ std::string SymbolResolver::resolve_kernel(uint64_t address) const {
 }
 
 std::vector<std::string>
-SymbolResolver::resolve_kernel_stack(int map_fd, int32_t stack_id) const {
+SymbolResolver::resolve_kernel_stack(int map_fd, int32_t stack_id, int depth) const {
   std::vector<std::string> frames;
   if (stack_id < 0)
     return frames;
 
-  // Look up the array of instruction pointer addresses for this stack ID.
-  uint64_t addrs[MAX_STACK_DEPTH] = {};
-  if (bpf_map_lookup_elem(map_fd, &stack_id, addrs) != 0)
+  std::vector<uint64_t> addrs(depth, 0);
+  if (bpf_map_lookup_elem(map_fd, &stack_id, addrs.data()) != 0)
     return frames;
 
-  // Resolve each non-zero address to a symbol name.
-  for (int i = 0; i < MAX_STACK_DEPTH; i++) {
+  for (int i = 0; i < depth; i++) {
     if (addrs[i] == 0)
       break;
     frames.push_back(resolve_kernel(addrs[i]));
@@ -205,25 +203,22 @@ std::string SymbolResolver::resolve_user(int pid, uint64_t address) const {
 }
 
 std::vector<std::string>
-SymbolResolver::resolve_user_stack(int map_fd, int32_t stack_id, int pid) {
-  std::vector<std::string> frames;
-
-  // Negative stack IDs mean BPF couldn't capture the stack. Nothing to resolve.
+SymbolResolver::resolve_user_stack(int map_fd, int32_t stack_id, int pid, int depth) {
   if (stack_id < 0)
-    return frames;
+    return {};
 
-  // Look up the array of instruction pointer addresses for this stack ID.
-  uint64_t addrs[MAX_STACK_DEPTH] = {};
-  if (bpf_map_lookup_elem(map_fd, &stack_id, addrs) != 0)
-    return frames;
+  // Heap-allocate the buffer sized to match the map's value_size exactly.
+  // A stack buffer sized to MAX_STACK_DEPTH would overflow for maps with
+  // larger depth (e.g. lock_stack_traces uses LOCK_MAX_STACK_DEPTH = 127).
+  std::vector<uint64_t> addrs(depth, 0);
+  if (bpf_map_lookup_elem(map_fd, &stack_id, addrs.data()) != 0)
+    return {};
 
-  // Load this process's memory mappings the first time we see it.
-  // process_maps_ is a cache keyed by pids, so we only pay this cost once per
-  // process.
   if (process_maps_.count(pid) == 0)
     load_process_maps(pid);
 
-  for (int i = 0; i < MAX_STACK_DEPTH; i++) {
+  std::vector<std::string> frames;
+  for (int i = 0; i < depth; i++) {
     if (addrs[i] == 0)
       break;
     frames.push_back(resolve_user(pid, addrs[i]));

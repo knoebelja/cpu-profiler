@@ -64,11 +64,10 @@ static std::unordered_map<std::string, SymbolInfo> load_descriptions() {
   return map;
 }
 
-ftxui::Element
-KernelDictionary::render(const std::vector<resolved_event> &events) const {
+ftxui::Element KernelDictionary::render(const heartbeat_data &data) const {
   auto descriptions = load_descriptions();
   std::unordered_map<std::string, int> counts;
-  for (const auto &event : events) {
+  for (const auto &event : data.events) {
     std::unordered_set<std::string> seen;
     for (const auto &raw : event.kernel_syms) {
       if (raw.empty())
@@ -85,7 +84,7 @@ KernelDictionary::render(const std::vector<resolved_event> &events) const {
   std::sort(ranked.begin(), ranked.end(),
             [](const auto &a, const auto &b) { return a.second > b.second; });
 
-  int total = static_cast<int>(events.size());
+  int total = static_cast<int>(data.events.size());
 
   Elements left_rows;
   left_rows.push_back(hbox({

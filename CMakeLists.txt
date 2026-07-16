@@ -23,6 +23,26 @@ add_custom_command(
 
 add_custom_target(perf_bpf_skel DEPENDS ${PERF_BPF_SKEL})
 
+set(LOCK_BPF_SOURCE ${CMAKE_SOURCE_DIR}/bpf/lock.bpf.c)
+set(LOCK_BPF_OBJECT ${CMAKE_BINARY_DIR}/lock.bpf.o)
+set(LOCK_BPF_SKEL   ${CMAKE_BINARY_DIR}/lock.skel.h)
+
+add_custom_command(
+    OUTPUT ${LOCK_BPF_OBJECT}
+    COMMAND clang -g -O2 -target bpf -D__TARGET_ARCH_X86
+            -I/usr/include/x86_64-linux-gnu
+            -c ${LOCK_BPF_SOURCE} -o ${LOCK_BPF_OBJECT}
+    DEPENDS ${LOCK_BPF_SOURCE} ${CMAKE_SOURCE_DIR}/bpf/lock.h
+)
+
+add_custom_command(
+    OUTPUT ${LOCK_BPF_SKEL}
+    COMMAND bpftool gen skeleton ${LOCK_BPF_OBJECT} > ${LOCK_BPF_SKEL}
+    DEPENDS ${LOCK_BPF_OBJECT}
+)
+
+add_custom_target(lock_bpf_skel DEPENDS ${LOCK_BPF_SKEL})
+
 include(FetchContent)
 
 FetchContent_Declare(
@@ -42,13 +62,15 @@ FetchContent_MakeAvailable(ftxui nlohmann_json)
 add_executable(profiler
     src/main.cpp
     src/collectors/perf_collector.cpp
+    src/collectors/lock_collector.cpp
     src/symbols.cpp
     src/aggregators/thread_activity.cpp
     src/aggregators/kernel_dictionary.cpp
     src/aggregators/call_stack.cpp
+    src/aggregators/lock_contention.cpp
 )
 
-add_dependencies(profiler perf_bpf_skel)
+add_dependencies(profiler perf_bpf_skel lock_bpf_skel)
 
 target_include_directories(profiler PRIVATE
     src

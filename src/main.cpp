@@ -13,8 +13,11 @@
 #include "aggregators/aggregator.h"
 #include "aggregators/call_stack.h"
 #include "aggregators/kernel_dictionary.h"
+#include "aggregators/lock_contention.h"
 #include "aggregators/thread_activity.h"
 #include "buffer.h"
+#include "heartbeat_data.h"
+#include "lock_collector.h"
 #include "perf_collector.h"
 #include "resolved_event.h"
 #include "symbols.h"
@@ -58,11 +61,15 @@ int main() {
   aggregators.push_back(std::make_unique<ThreadActivityAggregator>());
   aggregators.push_back(std::make_unique<KernelDictionary>());
   aggregators.push_back(std::make_unique<CallStack>());
+  aggregators.push_back(std::make_unique<LockContention>());
 
   int active = 0;
 
   Collector collector(99,
                       [&](const stack_event &event) { buffer.push(event); });
+
+  LockCollector lock_collector;
+  lock_collector.start();
 
   g_collector = &collector;
   signal(SIGINT, handle_signal);
@@ -72,7 +79,7 @@ int main() {
   auto screen = ScreenInteractive::Fullscreen();
 
   Element current_view = text("Loading...");
-  std::vector<resolved_event> last_snapshot;
+  heartbeat_data last_data;
   std::mutex view_mutex;
 
   // Sliding window of the last 60 seconds of resolved events.
@@ -109,12 +116,29 @@ int main() {
       while (!window.empty() && now_ms - window.front().timestamp_ms > 60000)
         window.pop_front();
 
-      std::vector<resolved_event> snapshot(window.begin(), window.end());
-      auto element = aggregators[active]->render(snapshot);
+      heartbeat_data hdata;
+      hdata.events = std::vector<resolved_event>(window.begin(), window.end());
+
+      int lock_fd = lock_collector.stack_traces_fd();
+      for (auto &[key, val] : lock_collector.snapshot_and_clear()) {
+        resolved_lock_entry entry;
+        entry.key = key;
+        entry.val = val;
+        if (lock_fd >= 0) {
+          if (key.waiter_stack_id >= 0)
+            entry.waiter_frames = resolver.resolve_user_stack(
+                lock_fd, key.waiter_stack_id, val.tgid, LOCK_MAX_STACK_DEPTH);
+          if (key.holder_stack_id >= 0)
+            entry.holder_frames = resolver.resolve_user_stack(
+                lock_fd, key.holder_stack_id, val.holder_tid, LOCK_MAX_STACK_DEPTH);
+        }
+        hdata.lock_stats.push_back(std::move(entry));
+      }
+      auto element = aggregators[active]->render(hdata);
 
       {
         std::lock_guard<std::mutex> lock(view_mutex);
-        last_snapshot = snapshot;
+        last_data = std::move(hdata);
         current_view = element;
       }
 
@@ -135,26 +159,26 @@ int main() {
           active = (active - 1 + (int)aggregators.size()) % (int)aggregators.size();
           aggregators[active]->reset_scroll();
           std::lock_guard<std::mutex> lock(view_mutex);
-          current_view = aggregators[active]->render(last_snapshot);
+          current_view = aggregators[active]->render(last_data);
           return true;
         }
         if (event == Event::ArrowRight) {
           active = (active + 1) % (int)aggregators.size();
           aggregators[active]->reset_scroll();
           std::lock_guard<std::mutex> lock(view_mutex);
-          current_view = aggregators[active]->render(last_snapshot);
+          current_view = aggregators[active]->render(last_data);
           return true;
         }
         if (event == Event::ArrowUp) {
           aggregators[active]->scroll(-1);
           std::lock_guard<std::mutex> lock(view_mutex);
-          current_view = aggregators[active]->render(last_snapshot);
+          current_view = aggregators[active]->render(last_data);
           return true;
         }
         if (event == Event::ArrowDown) {
           aggregators[active]->scroll(1);
           std::lock_guard<std::mutex> lock(view_mutex);
-          current_view = aggregators[active]->render(last_snapshot);
+          current_view = aggregators[active]->render(last_data);
           return true;
         }
         if (event == Event::Character('q')) {
@@ -167,6 +191,7 @@ int main() {
   screen.Loop(component);
 
   collector.stop();
+  lock_collector.stop();
   collector_thread.join();
   heartbeat.detach();
 

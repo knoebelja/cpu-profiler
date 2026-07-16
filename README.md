@@ -14,6 +14,8 @@ A suite of eBPF-based OS observability tools — starting with CPU, with memory 
 
 ![Kernel Dictionary View](screenshots/tui-kernel-dictionary.png)
 
+![Lock Contention View](screenshots/tui-lock-contention.png)
+
 ## Current Progress
 
 - [x] BPF program sampling all CPUs at 99hz via perf events
@@ -27,6 +29,7 @@ A suite of eBPF-based OS observability tools — starting with CPU, with memory 
 - [x] Symbol descriptions stored in `data/descriptions.json` (483 symbols with categories)
 - [x] `collect_symbols` tool to discover new kernel symbols on a running system
 - [x] Call stack view: top kernel call chains as proportional colored bars, ranked by frequency
+- [x] Lock contention view: futex holder-waiter pairs grouped by call stack, with waiter and holder frames side by side
 
 ## Live Snapshot
 
@@ -69,6 +72,7 @@ The TUI refreshes every 3.4 seconds. Terminal size determines how much data is s
 - **Thread activity**: per-thread breakdown of time spent in kernel, userspace, and idle
 - **Kernel dictionary**: top-20 kernel symbols ranked by CPU utilization, with descriptions and category color coding
 - **Call stacks**: top kernel call chains rendered as proportional colored bars, ranked by sample frequency
+- **Lock contention**: futex holder-waiter pairs grouped by call stack, sorted by total wait time; shows waiter (yellow ←) and holder (cyan →) frames side by side
 
 ## Project Structure
 

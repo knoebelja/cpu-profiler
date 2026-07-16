@@ -6,11 +6,10 @@
 
 using namespace ftxui;
 
-ftxui::Element ThreadActivityAggregator::render(
-    const std::vector<resolved_event> &events) const {
+ftxui::Element ThreadActivityAggregator::render(const heartbeat_data &data) const {
   // Build per-thread stats from the event snapshot
   std::unordered_map<int, ThreadStats> threads;
-  for (const auto &event : events) {
+  for (const auto &event : data.events) {
     auto &t = threads[event.cpu];
     if (event.pid == 0) {
       t.idle++;

@@ -12,8 +12,7 @@ struct ThreadStats {
 
 class ThreadActivityAggregator : public Aggregator {
 public:
-  ftxui::Element
-  render(const std::vector<resolved_event> &events) const override;
+  ftxui::Element render(const heartbeat_data &data) const override;
 
   std::string title() const override { return "Thread Activity"; }
 
