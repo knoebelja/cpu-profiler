@@ -84,3 +84,19 @@ std::vector<std::pair<lock_stat_key, lock_stat_val>> LockCollector::snapshot_and
 
     return results;
 }
+
+void LockCollector::clear_stack_traces() {
+    if (stack_traces_fd_ < 0)
+        return;
+
+    // Two-phase: collect keys first, then delete, to avoid restart-on-delete.
+    std::vector<int32_t> keys;
+    int32_t next_key;
+    int32_t *prev_key = nullptr;
+    while (bpf_map_get_next_key(stack_traces_fd_, prev_key, &next_key) == 0) {
+        keys.push_back(next_key);
+        prev_key = &keys.back();
+    }
+    for (auto &k : keys)
+        bpf_map_delete_elem(stack_traces_fd_, &k);
+}

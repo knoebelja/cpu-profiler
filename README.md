@@ -50,7 +50,7 @@ jq '[.[].kernel_syms[]] | group_by(.) | map({sym: .[0], count: length}) | sort_b
 ## Dependencies
 
 ```bash
-sudo apt install clang libbpf-dev libelf-dev zlib1g-dev bpftool cmake
+sudo apt install clang libbpf-dev libelf-dev libdw-dev zlib1g-dev bpftool cmake
 ```
 
 ## Build

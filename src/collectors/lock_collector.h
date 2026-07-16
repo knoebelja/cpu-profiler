@@ -23,6 +23,10 @@ public:
     // deletes each entry from the map, and returns the results.
     std::vector<std::pair<lock_stat_key, lock_stat_val>> snapshot_and_clear();
 
+    // Deletes all entries from lock_stack_traces. Call this after resolving
+    // all stack IDs from the last snapshot, so the map doesn't fill up.
+    void clear_stack_traces();
+
 private:
     struct lock_bpf *skel_       = nullptr;
     int stack_traces_fd_         = -1;

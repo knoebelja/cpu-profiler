@@ -10,6 +10,7 @@ struct resolved_lock_entry {
     lock_stat_val val;
     std::vector<std::string> waiter_frames;
     std::vector<std::string> holder_frames;
+    std::string lock_name; // variable name from DWARF, empty if not found
 };
 
 struct heartbeat_data {

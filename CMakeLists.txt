@@ -3,6 +3,12 @@ project(learning-profilers)
 
 set(CMAKE_CXX_STANDARD 17)
 
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(LIBDW libdw)
+if(NOT LIBDW_FOUND)
+    message(FATAL_ERROR "libdw not found — run: sudo apt install libdw-dev")
+endif()
+
 set(PERF_BPF_SOURCE ${CMAKE_SOURCE_DIR}/bpf/perf.bpf.c)
 set(PERF_BPF_OBJECT ${CMAKE_BINARY_DIR}/perf.bpf.o)
 set(PERF_BPF_SKEL   ${CMAKE_BINARY_DIR}/perf.skel.h)
@@ -79,6 +85,7 @@ target_include_directories(profiler PRIVATE
     src/profilers
     bpf
     ${CMAKE_BINARY_DIR}
+    ${LIBDW_INCLUDE_DIRS}
 )
 
 target_compile_definitions(profiler PRIVATE SOURCE_DIR="${CMAKE_SOURCE_DIR}")
@@ -87,6 +94,7 @@ target_link_libraries(profiler PRIVATE
     bpf
     elf
     z
+    ${LIBDW_LIBRARIES}
     ftxui::screen
     ftxui::dom
     ftxui::component
@@ -115,6 +123,25 @@ target_link_libraries(collect_symbols PRIVATE
     elf
     z
     nlohmann_json::nlohmann_json
+)
+
+add_executable(debug_resolve
+    tools/debug_resolve.cpp
+    src/symbols.cpp
+)
+
+target_include_directories(debug_resolve PRIVATE
+    src
+    bpf
+    ${CMAKE_BINARY_DIR}
+    ${LIBDW_INCLUDE_DIRS}
+)
+
+target_link_libraries(debug_resolve PRIVATE
+    bpf
+    elf
+    z
+    ${LIBDW_LIBRARIES}
 )
 
 add_executable(sim sim/main.cpp)

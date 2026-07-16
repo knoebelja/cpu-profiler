@@ -132,8 +132,11 @@ int main() {
             entry.holder_frames = resolver.resolve_user_stack(
                 lock_fd, key.holder_stack_id, val.holder_tid, LOCK_MAX_STACK_DEPTH);
         }
+        entry.lock_name = resolver.resolve_variable_name(val.tgid, key.uaddr);
         hdata.lock_stats.push_back(std::move(entry));
       }
+      // Clear stack traces after resolving so the map doesn't fill up across cycles.
+      lock_collector.clear_stack_traces();
       auto element = aggregators[active]->render(hdata);
 
       {
@@ -189,6 +192,16 @@ int main() {
       });
 
   screen.Loop(component);
+
+  // Render the last active view to a static file on exit.
+  {
+    std::lock_guard<std::mutex> lk(view_mutex);
+    auto snap = ftxui::Screen::Create(ftxui::Dimension::Full());
+    ftxui::Render(snap, current_view);
+    std::ofstream snap_f("/tmp/profiler_exit.txt");
+    if (snap_f)
+      snap_f << snap.ToString();
+  }
 
   collector.stop();
   lock_collector.stop();

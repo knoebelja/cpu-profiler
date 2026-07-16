@@ -52,14 +52,27 @@ public:
                                               int pid,
                                               int depth = MAX_STACK_DEPTH);
 
+  // Looks up the variable name for a userspace address using DWARF debug info.
+  // Only works for global/static variables whose address is fixed at link time
+  // (DW_OP_addr in their location expression). Returns empty string if not found.
+  std::string resolve_variable_name(int pid, uint64_t uaddr);
+
 private:
   // Sorted map of address -> symbol name.
   // std::map keeps keys in order, which lets us use upper_bound
   // for nearest-match lookup.
   std::map<uint64_t, std::string> kernel_syms_;
 
-  // Keyed by pid, each entry is a sorted list of mappings for that process
+  // Keyed by pid, each entry is a sorted list of mappings for that process.
+  // Only executable (r-xp) mappings — used for function resolution.
   std::unordered_map<int, std::vector<MapEntry>> process_maps_;
+
+  // All named mappings per pid (any permission).
+  // Used to compute load bias: the entry with file_offset==0 gives load_bias=start,
+  // and then elf_vaddr = uaddr - load_bias works for code, data, and BSS alike.
+  std::unordered_map<int, std::vector<MapEntry>> all_named_maps_;
+
+  bool load_all_named_maps(int pid);
 
   // Parses .symtab and .dynsym from the given ELF file and populates
   // elf_syms_[path]. Called lazily the first time a path is seen.
@@ -73,4 +86,12 @@ private:
   // process-level, so one cache entry covers every process using that lib.
   // mutable because load_elf_symbols populates it lazily from const resolve_user
   mutable std::unordered_map<std::string, std::vector<std::pair<uint64_t, std::string>>> elf_syms_;
+
+  // DWARF variable cache: keyed by file path, maps ELF virtual address → variable name.
+  // Populated lazily by load_dwarf_variables. Only global/static variables are indexed.
+  mutable std::unordered_map<std::string, std::unordered_map<uint64_t, std::string>> dwarf_vars_;
+
+  // Walks .debug_info in the given ELF file and indexes all DW_TAG_variable entries
+  // that have a DW_OP_addr location (i.e. global/static variables).
+  void load_dwarf_variables(const std::string &path) const;
 };

@@ -4,7 +4,10 @@
 #include <bpf/bpf.h>
 #include <cstdint>
 #include <cstdio>
+#include <cstring>
 #include <cxxabi.h>
+#include <dwarf.h>
+#include <elfutils/libdw.h>
 #include <fcntl.h>
 #include <gelf.h>
 #include <libelf.h>
@@ -91,6 +94,36 @@ bool SymbolResolver::load_process_maps(int pid) {
 
   fclose(f);
   process_maps_[pid] = std::move(entries);
+  return true;
+}
+
+bool SymbolResolver::load_all_named_maps(int pid) {
+  char path[64];
+  snprintf(path, sizeof(path), "/proc/%d/maps", pid);
+
+  FILE *f = fopen(path, "r");
+  if (!f)
+    return false;
+
+  std::vector<MapEntry> entries;
+  uint64_t start, end, file_offset;
+  char perms[8], path_buf[256] = {};
+
+  while (fscanf(f, "%lx-%lx %7s %lx %*s %*s %255[^\n]\n", &start, &end, perms,
+                &file_offset, path_buf) >= 4) {
+    if (path_buf[0] == '/') {
+      MapEntry e;
+      e.start = start;
+      e.end = end;
+      e.file_offset = file_offset;
+      e.path = path_buf;
+      entries.push_back(e);
+    }
+    path_buf[0] = '\0';
+  }
+
+  fclose(f);
+  all_named_maps_[pid] = std::move(entries);
   return true;
 }
 
@@ -190,9 +223,11 @@ std::string SymbolResolver::resolve_user(int pid, uint64_t address) const {
         }
       }
 
-      // No symbol found — fall back to file+offset for debugging visibility
+      // No symbol found — fall back to filename+offset (not full path)
+      const char *slash = strrchr(entry.path.c_str(), '/');
+      const char *fname = slash ? slash + 1 : entry.path.c_str();
       char buf[256];
-      snprintf(buf, sizeof(buf), "%s+0x%lx", entry.path.c_str(), elf_vaddr);
+      snprintf(buf, sizeof(buf), "%s+0x%lx", fname, elf_vaddr);
       return buf;
     }
   }
@@ -225,4 +260,104 @@ SymbolResolver::resolve_user_stack(int map_fd, int32_t stack_id, int pid, int de
   }
 
   return frames;
+}
+
+void SymbolResolver::load_dwarf_variables(const std::string &path) const {
+  // Mark as attempted so we don't retry on failure.
+  auto &cache = dwarf_vars_[path];
+
+  int fd = open(path.c_str(), O_RDONLY);
+  if (fd < 0)
+    return;
+
+  Dwarf *dbg = dwarf_begin(fd, DWARF_C_READ);
+  if (!dbg) {
+    close(fd);
+    return;
+  }
+
+  // Walk every compilation unit in .debug_info
+  Dwarf_Off cu_off = 0, next_off;
+  size_t hdr_size;
+  while (dwarf_nextcu(dbg, cu_off, &next_off, &hdr_size, nullptr, nullptr, nullptr) == 0) {
+    Dwarf_Die cu_die;
+    if (!dwarf_offdie(dbg, cu_off + hdr_size, &cu_die)) {
+      cu_off = next_off;
+      continue;
+    }
+
+    // Walk all DIEs in this CU looking for DW_TAG_variable
+    Dwarf_Die die;
+    if (dwarf_child(&cu_die, &die) != 0) {
+      cu_off = next_off;
+      continue;
+    }
+
+    do {
+      if (dwarf_tag(&die) != DW_TAG_variable)
+        continue;
+
+      // Get the variable name
+      const char *name = dwarf_diename(&die);
+      if (!name)
+        continue;
+
+      // Get the location attribute — we only care about DW_OP_addr (global/static)
+      Dwarf_Attribute loc_attr;
+      if (!dwarf_attr(&die, DW_AT_location, &loc_attr))
+        continue;
+
+      Dwarf_Op *ops;
+      size_t nops;
+      if (dwarf_getlocation(&loc_attr, &ops, &nops) != 0 || nops == 0)
+        continue;
+
+      // DW_OP_addr means the variable lives at a fixed address — global or static
+      if (ops[0].atom != DW_OP_addr)
+        continue;
+
+      uint64_t elf_addr = ops[0].number;
+      cache[elf_addr] = name;
+
+    } while (dwarf_siblingof(&die, &die) == 0);
+
+    cu_off = next_off;
+  }
+
+  dwarf_end(dbg);
+  close(fd);
+}
+
+std::string SymbolResolver::resolve_variable_name(int pid, uint64_t uaddr) {
+  if (all_named_maps_.count(pid) == 0)
+    load_all_named_maps(pid);
+
+  auto it = all_named_maps_.find(pid);
+  if (it == all_named_maps_.end())
+    return {};
+
+  // The first PT_LOAD segment (file_offset==0) gives the ASLR load bias.
+  // Using elf_vaddr = uaddr - load_bias avoids the p_vaddr != p_offset mismatch
+  // that breaks the "uaddr - start + file_offset" formula for data segments.
+  std::unordered_map<std::string, uint64_t> load_biases;
+  for (const auto &e : it->second) {
+    if (e.file_offset == 0 && !load_biases.count(e.path))
+      load_biases[e.path] = e.start;
+  }
+
+  for (const auto &[path, load_bias] : load_biases) {
+    if (uaddr < load_bias)
+      continue;
+    uint64_t elf_vaddr = uaddr - load_bias;
+
+    if (dwarf_vars_.count(path) == 0)
+      load_dwarf_variables(path);
+
+    const auto &vars = dwarf_vars_[path];
+    auto vit = vars.find(elf_vaddr);
+    if (vit != vars.end())
+      return vit->second;
+  }
+
+  return {};
 }
