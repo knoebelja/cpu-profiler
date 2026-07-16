@@ -14,6 +14,8 @@ A suite of eBPF-based OS observability tools — starting with CPU, with memory 
 
 ![Kernel Dictionary View](screenshots/tui-kernel-dictionary.png)
 
+![Call Stack View](screenshots/tui-call-stack.png)
+
 ![Lock Contention View](screenshots/tui-lock-contention.png)
 
 ## Current Progress
