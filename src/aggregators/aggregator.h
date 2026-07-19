@@ -17,4 +17,10 @@ public:
   // Override to support up/down scroll navigation. Default is no-op.
   virtual void scroll(int delta) {}
   virtual void reset_scroll() {}
+
+  // Override to cycle through filter options (e.g. by binary name). Default is no-op.
+  virtual void next_filter() {}
+
+  // Override to cycle through debug-symbol filter (all / symbolized / unsymbolized).
+  virtual void next_debug_filter() {}
 };

@@ -8,6 +8,7 @@
 #include <cxxabi.h>
 #include <dwarf.h>
 #include <elfutils/libdw.h>
+#include <elf.h>
 #include <fcntl.h>
 #include <gelf.h>
 #include <libelf.h>
@@ -138,11 +139,65 @@ static std::string demangle(const std::string &name) {
   return name;
 }
 
+// If the binary has a GNU build-id, look for a matching .debug file under
+// /usr/lib/debug/.build-id/XX/YYYY.debug (installed by *-dbg packages).
+// Returns the debug path if found, otherwise returns the original path.
+static std::string find_debug_file(const std::string &path) {
+  elf_version(EV_CURRENT);
+  int fd = open(path.c_str(), O_RDONLY);
+  if (fd < 0) return path;
+  Elf *e = elf_begin(fd, ELF_C_READ, nullptr);
+  if (!e) { close(fd); return path; }
+
+  std::string debug_path;
+  Elf_Scn *scn = nullptr;
+  while ((scn = elf_nextscn(e, scn)) != nullptr) {
+    GElf_Shdr shdr;
+    gelf_getshdr(scn, &shdr);
+    if (shdr.sh_type != SHT_NOTE) continue;
+    Elf_Data *data = elf_getdata(scn, nullptr);
+    if (!data) continue;
+
+    size_t off = 0;
+    while (off + sizeof(GElf_Nhdr) <= data->d_size) {
+      GElf_Nhdr nhdr;
+      memcpy(&nhdr, (char *)data->d_buf + off, sizeof(nhdr));
+      off += sizeof(nhdr);
+      size_t name_sz = (nhdr.n_namesz + 3) & ~3;
+      size_t desc_sz = (nhdr.n_descsz + 3) & ~3;
+      if (nhdr.n_type == NT_GNU_BUILD_ID && nhdr.n_namesz == 4 &&
+          memcmp((char *)data->d_buf + off, "GNU", 4) == 0 &&
+          nhdr.n_descsz >= 2) {
+        const uint8_t *id = (const uint8_t *)data->d_buf + off + name_sz;
+        char hex[nhdr.n_descsz * 2 + 1];
+        for (size_t i = 0; i < nhdr.n_descsz; i++)
+          snprintf(hex + i * 2, 3, "%02x", id[i]);
+        char candidate[256];
+        snprintf(candidate, sizeof(candidate),
+                 "/usr/lib/debug/.build-id/%c%c/%s.debug", hex[0], hex[1], hex + 2);
+        if (access(candidate, R_OK) == 0)
+          debug_path = candidate;
+        break;
+      }
+      off += name_sz + desc_sz;
+    }
+    if (!debug_path.empty()) break;
+  }
+
+  elf_end(e);
+  close(fd);
+  return debug_path.empty() ? path : debug_path;
+}
+
 void SymbolResolver::load_elf_symbols(const std::string &path) const {
   // elf_begin requires a version call before first use.
   elf_version(EV_CURRENT);
 
-  int fd = open(path.c_str(), O_RDONLY);
+  // Prefer the separate debug file (installed by *-dbg packages) — it has
+  // the full .symtab including non-exported internal functions.
+  std::string load_path = find_debug_file(path);
+
+  int fd = open(load_path.c_str(), O_RDONLY);
   if (fd < 0) {
     elf_syms_[path] = {};
     return;

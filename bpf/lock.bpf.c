@@ -62,7 +62,7 @@ int handle_futex_enter(struct sys_enter_ctx *ctx)
 {
     int cmd = (int)(ctx->args[1]) & ~(FUTEX_PRIVATE_FLAG | FUTEX_CLOCK_REALTIME);
 
-    if (cmd == FUTEX_WAKE || cmd == FUTEX_WAKE_BITSET) {
+    if (cmd == FUTEX_WAKE) {
         // The calling thread is the lock holder releasing the lock.
         // Capture their call stack so we can correlate it with blocked waiters.
         __u64 pid_tgid = bpf_get_current_pid_tgid();
@@ -77,7 +77,7 @@ int handle_futex_enter(struct sys_enter_ctx *ctx)
         return 0;
     }
 
-    if (cmd != FUTEX_WAIT && cmd != FUTEX_WAIT_BITSET)
+    if (cmd != FUTEX_WAIT)
         return 0;
 
     __u64 pid_tgid = bpf_get_current_pid_tgid();
@@ -109,7 +109,7 @@ int handle_futex_exit(struct sys_exit_ctx *ctx)
     __u64 wait_ns = bpf_ktime_get_ns() - start->timestamp_ns;
 
     // skip spurious wakeups and uncontended fast paths
-    if (wait_ns < 1000000ULL) {
+    if (wait_ns < 10000ULL) {
         bpf_map_delete_elem(&pending_waits, &tid);
         return 0;
     }
